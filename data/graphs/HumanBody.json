@@ -4,16 +4,28 @@
     { "id": "HumanBody", "parent": null, "type": "cluster" },
 
     { "id": "IntegumentarySystem", "parent": "HumanBody", "type": "cluster" },
-    { "id": "Thermoregulation", "parent": "IntegumentarySystem", "type": "cluster" },
+    {
+      "id": "Thermoregulation",
+      "parent": "IntegumentarySystem",
+      "type": "cluster"
+    },
 
     { "id": "BonesJoints", "parent": "HumanBody", "type": "cluster" },
 
     { "id": "NeuromuscularSystem", "parent": "HumanBody", "type": "cluster" },
-    { "id": "CentralNervous", "parent": "NeuromuscularSystem", "type": "cluster" },
+    {
+      "id": "CentralNervous",
+      "parent": "NeuromuscularSystem",
+      "type": "cluster"
+    },
     { "id": "Muscles", "parent": "NeuromuscularSystem", "type": "cluster" },
 
     { "id": "EndocrineSystem", "parent": "HumanBody", "type": "cluster" },
-    { "id": "MajorEndocrineGlands", "parent": "EndocrineSystem", "type": "cluster" },
+    {
+      "id": "MajorEndocrineGlands",
+      "parent": "EndocrineSystem",
+      "type": "cluster"
+    },
     { "id": "GonadalGlands", "parent": "EndocrineSystem", "type": "cluster" },
 
     { "id": "HeartCirculation", "parent": "HumanBody", "type": "cluster" },
@@ -28,134 +40,454 @@
     { "id": "FiltrationOrgans", "parent": "HumanBody", "type": "cluster" },
 
     { "id": "ReproductiveSystem", "parent": "HumanBody", "type": "cluster" },
-    { "id": "MaleReproductive", "parent": "ReproductiveSystem", "type": "cluster" },
-    { "id": "FemaleReproductive", "parent": "ReproductiveSystem", "type": "cluster" },
+    {
+      "id": "MaleReproductive",
+      "parent": "ReproductiveSystem",
+      "type": "cluster"
+    },
+    {
+      "id": "FemaleReproductive",
+      "parent": "ReproductiveSystem",
+      "type": "cluster"
+    },
 
-    { "id": "1", "parent": "Thermoregulation", "type": "leaf", "label": "Subcutaneous Fat" },
+    {
+      "id": "1",
+      "parent": "Thermoregulation",
+      "type": "leaf",
+      "label": "Subcutaneous Fat"
+    },
 
     { "id": "2", "parent": "BonesJoints", "type": "leaf", "label": "Bones" },
 
     { "id": "3", "parent": "CentralNervous", "type": "leaf", "label": "Brain" },
-    { "id": "4", "parent": "CentralNervous", "type": "leaf", "label": "Spinal Cord" },
-    { "id": "5", "parent": "CentralNervous", "type": "leaf", "label": "Hypothalamus" },
+    {
+      "id": "4",
+      "parent": "CentralNervous",
+      "type": "leaf",
+      "label": "Spinal Cord"
+    },
+    {
+      "id": "5",
+      "parent": "CentralNervous",
+      "type": "leaf",
+      "label": "Hypothalamus"
+    },
 
-    { "id": "6", "parent": "Muscles", "type": "leaf", "label": "Skeletal Muscles" },
-    { "id": "7", "parent": "Muscles", "type": "leaf", "label": "Smooth Muscles" },
-    { "id": "8", "parent": "Muscles", "type": "leaf", "label": "Cardiac Muscle" },
+    {
+      "id": "6",
+      "parent": "Muscles",
+      "type": "leaf",
+      "label": "Skeletal Muscles"
+    },
+    {
+      "id": "7",
+      "parent": "Muscles",
+      "type": "leaf",
+      "label": "Smooth Muscles"
+    },
+    {
+      "id": "8",
+      "parent": "Muscles",
+      "type": "leaf",
+      "label": "Cardiac Muscle"
+    },
 
-    { "id": "9", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Pituitary Gland" },
-    { "id": "10", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Pineal Gland" },
-    { "id": "11", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Thyroid Gland" },
-    { "id": "12", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Parathyroid Glands" },
-    { "id": "13", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Adrenal Glands" },
-    { "id": "14", "parent": "MajorEndocrineGlands", "type": "leaf", "label": "Pancreas" },
-    { "id": "15", "parent": "GonadalGlands", "type": "leaf", "label": "Ovaries" },
-    { "id": "16", "parent": "GonadalGlands", "type": "leaf", "label": "Testicles" },
+    {
+      "id": "9",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Pituitary Gland"
+    },
+    {
+      "id": "10",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Pineal Gland"
+    },
+    {
+      "id": "11",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Thyroid Gland"
+    },
+    {
+      "id": "12",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Parathyroid Glands"
+    },
+    {
+      "id": "13",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Adrenal Glands"
+    },
+    {
+      "id": "14",
+      "parent": "MajorEndocrineGlands",
+      "type": "leaf",
+      "label": "Pancreas"
+    },
+    {
+      "id": "15",
+      "parent": "GonadalGlands",
+      "type": "leaf",
+      "label": "Ovaries"
+    },
+    {
+      "id": "16",
+      "parent": "GonadalGlands",
+      "type": "leaf",
+      "label": "Testicles"
+    },
 
-    { "id": "17", "parent": "HeartCirculation", "type": "leaf", "label": "Heart" },
-    { "id": "18", "parent": "HeartCirculation", "type": "leaf", "label": "Blood" },
+    {
+      "id": "17",
+      "parent": "HeartCirculation",
+      "type": "leaf",
+      "label": "Heart"
+    },
+    {
+      "id": "18",
+      "parent": "HeartCirculation",
+      "type": "leaf",
+      "label": "Blood"
+    },
 
-    { "id": "19", "parent": "LymphoidOrgans", "type": "leaf", "label": "Thymus" },
+    {
+      "id": "19",
+      "parent": "LymphoidOrgans",
+      "type": "leaf",
+      "label": "Thymus"
+    },
 
-    { "id": "20", "parent": "AlimentaryTract", "type": "leaf", "label": "Stomach" },
-    { "id": "21", "parent": "AlimentaryTract", "type": "leaf", "label": "Small Intestine" },
-    { "id": "22", "parent": "AccessoryOrgans", "type": "leaf", "label": "Liver" },
+    {
+      "id": "20",
+      "parent": "AlimentaryTract",
+      "type": "leaf",
+      "label": "Stomach"
+    },
+    {
+      "id": "21",
+      "parent": "AlimentaryTract",
+      "type": "leaf",
+      "label": "Small Intestine"
+    },
+    {
+      "id": "22",
+      "parent": "AccessoryOrgans",
+      "type": "leaf",
+      "label": "Liver"
+    },
 
-    { "id": "23", "parent": "FiltrationOrgans", "type": "leaf", "label": "Kidneys" },
+    {
+      "id": "23",
+      "parent": "FiltrationOrgans",
+      "type": "leaf",
+      "label": "Kidneys"
+    },
 
-    { "id": "24", "parent": "MaleReproductive", "type": "leaf", "label": "Penis" },
-    { "id": "25", "parent": "MaleReproductive", "type": "leaf", "label": "Testicles" },
-    { "id": "26", "parent": "MaleReproductive", "type": "leaf", "label": "Vasa Deferentia" },
-    { "id": "27", "parent": "MaleReproductive", "type": "leaf", "label": "Seminal Vesicles" },
-    { "id": "28", "parent": "MaleReproductive", "type": "leaf", "label": "Prostate" },
-    { "id": "29", "parent": "FemaleReproductive", "type": "leaf", "label": "Ovaries" },
-    { "id": "30", "parent": "FemaleReproductive", "type": "leaf", "label": "Fallopian Tubes" },
-    { "id": "31", "parent": "FemaleReproductive", "type": "leaf", "label": "Uterus" },
-    { "id": "32", "parent": "FemaleReproductive", "type": "leaf", "label": "Vagina" },
-    { "id": "33", "parent": "FemaleReproductive", "type": "leaf", "label": "Vulva" },
-    { "id": "34", "parent": "FemaleReproductive", "type": "leaf", "label": "Mammary Glands" }
+    {
+      "id": "24",
+      "parent": "MaleReproductive",
+      "type": "leaf",
+      "label": "Penis"
+    },
+    {
+      "id": "25",
+      "parent": "MaleReproductive",
+      "type": "leaf",
+      "label": "Testicles"
+    },
+    {
+      "id": "26",
+      "parent": "MaleReproductive",
+      "type": "leaf",
+      "label": "Vasa Deferentia"
+    },
+    {
+      "id": "27",
+      "parent": "MaleReproductive",
+      "type": "leaf",
+      "label": "Seminal Vesicles"
+    },
+    {
+      "id": "28",
+      "parent": "MaleReproductive",
+      "type": "leaf",
+      "label": "Prostate"
+    },
+    {
+      "id": "29",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Ovaries"
+    },
+    {
+      "id": "30",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Fallopian Tubes"
+    },
+    {
+      "id": "31",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Uterus"
+    },
+    {
+      "id": "32",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Vagina"
+    },
+    {
+      "id": "33",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Vulva"
+    },
+    {
+      "id": "34",
+      "parent": "FemaleReproductive",
+      "type": "leaf",
+      "label": "Mammary Glands"
+    }
   ],
   "edges": [
-    {"source": "5", "target": "9", "label": "CRH\nGHRH\nTRH\nDopamine\nSomatostatin\nGnRH", "weight": 6},
-    {"source": "5", "target": "3", "label": "Oxytocin\nADH", "weight": 2},
-    {"source": "9", "target": "11", "label": "TSH", "weight": 1},
-    {"source": "9", "target": "13", "label": "ACTH", "weight": 1},
-    {"source": "9", "target": "15", "label": "FSH\nLH", "weight": 2},
-    {"source": "9", "target": "16", "label": "FSH\nLH", "weight": 2},
-    {"source": "9", "target": "6", "label": "Growth Hormone", "weight": 1},
-    {"source": "9", "target": "22", "label": "Growth Hormone", "weight": 1},
-    {"source": "9", "target": "34", "label": "Prolactin", "weight": 1},
-    {"source": "9", "target": "15", "label": "Prolactin", "weight": 1},
-    {"source": "9", "target": "16", "label": "Prolactin", "weight": 1},
-    {"source": "11", "target": "3", "label": "Thyroxine (T4)\nTriiodothyronine (T3)\nReverse T3", "weight": 3},
-    {"source": "11", "target": "6", "label": "Thyroid Hormones", "weight": 1},
-    {"source": "11", "target": "17", "label": "Thyroid Hormones", "weight": 1},
-    {"source": "11", "target": "1", "label": "Thyroid Hormones", "weight": 1},
-    {"source": "11", "target": "2", "label": "Calcitonin", "weight": 1},
-    {"source": "12", "target": "2", "label": "Parathyroid Hormone (PTH)", "weight": 1},
-    {"source": "12", "target": "23", "label": "Parathyroid Hormone (PTH)", "weight": 1},
-    {"source": "13", "target": "17", "label": "Epinephrine\nNorepinephrine", "weight": 2},
-    {"source": "13", "target": "6", "label": "Epinephrine\nNorepinephrine", "weight": 2},
-    {"source": "13", "target": "7", "label": "Epinephrine\nNorepinephrine", "weight": 2},
-    {"source": "13", "target": "3", "label": "Cortisol\nAldosterone\nCorticosteroids", "weight": 3},
-    {"source": "13", "target": "23", "label": "Aldosterone", "weight": 1},
-    {"source": "13", "target": "1", "label": "Corticosteroids", "weight": 1},
-    {"source": "13", "target": "6", "label": "Corticosteroids", "weight": 1},
-    {"source": "13", "target": "15", "label": "DHEA\nAndrostenedione", "weight": 2},
-    {"source": "13", "target": "16", "label": "DHEA\nAndrostenedione", "weight": 2},
-    {"source": "14", "target": "6", "label": "Insulin\nGlucagon", "weight": 2},
-    {"source": "14", "target": "7", "label": "Insulin\nGlucagon", "weight": 2},
-    {"source": "14", "target": "22", "label": "Insulin\nGlucagon", "weight": 2},
-    {"source": "14", "target": "3", "label": "Insulin\nGlucagon", "weight": 2},
-    {"source": "14", "target": "1", "label": "Insulin\nGlucagon", "weight": 2},
-    {"source": "14", "target": "3", "label": "Amylin", "weight": 1},
-    {"source": "14", "target": "9", "label": "Somatostatin", "weight": 1},
-    {"source": "14", "target": "22", "label": "Somatostatin", "weight": 1},
-    {"source": "15", "target": "29", "label": "Estrogen\nProgesterone\nTestosterone", "weight": 3},
-    {"source": "15", "target": "30", "label": "Estrogen\nProgesterone", "weight": 2},
-    {"source": "15", "target": "31", "label": "Estrogen\nProgesterone", "weight": 2},
-    {"source": "15", "target": "3", "label": "Estrogen\nProgesterone", "weight": 2},
-    {"source": "15", "target": "2", "label": "Estrogen", "weight": 1},
-    {"source": "15", "target": "32", "label": "Estrogen", "weight": 1},
-    {"source": "15", "target": "33", "label": "Estrogen", "weight": 1},
-    {"source": "15", "target": "9", "label": "Inhibin", "weight": 1},
-    {"source": "16", "target": "25", "label": "Testosterone\nInhibin", "weight": 2},
-    {"source": "16", "target": "24", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "3", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "6", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "2", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "26", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "27", "label": "Testosterone", "weight": 1},
-    {"source": "16", "target": "28", "label": "Testosterone\nDHT", "weight": 2},
-    {"source": "16", "target": "9", "label": "Inhibin", "weight": 1},
-    {"source": "10", "target": "3", "label": "Melatonin", "weight": 1},
-    {"source": "19", "target": "18", "label": "Humoral factors\nThymosin\nThymopoietin", "weight": 3},
-    {"source": "23", "target": "18", "label": "Erythropoietin", "weight": 1},
-    {"source": "23", "target": "17", "label": "Renin", "weight": 1},
-    {"source": "23", "target": "13", "label": "Angiotensin", "weight": 1},
-    {"source": "23", "target": "2", "label": "Calcitriol", "weight": 1},
-    {"source": "17", "target": "23", "label": "ANP\nBNP", "weight": 2},
-    {"source": "1", "target": "3", "label": "Leptin\nAdiponectin\nPAI-1", "weight": 3},
-    {"source": "1", "target": "14", "label": "Leptin\nAdiponectin", "weight": 2},
-    {"source": "1", "target": "6", "label": "Leptin\nAdiponectin", "weight": 2},
-    {"source": "20", "target": "14", "label": "Gastrin", "weight": 1},
-    {"source": "21", "target": "14", "label": "Secretin\nCCK\nVIP\nGIP", "weight": 4},
-    {"source": "21", "target": "20", "label": "Enterogastrone", "weight": 1},
-    {"source": "20", "target": "3", "label": "Ghrelin", "weight": 1},
-    {"source": "21", "target": "14", "label": "GLP-1\nGIP", "weight": 2},
-    {"source": "21", "target": "20", "label": "Motilin", "weight": 1},
-    {"source": "21", "target": "14", "label": "Somatostatin", "weight": 1},
-    {"source": "21", "target": "9", "label": "Somatostatin", "weight": 1},
-    {"source": "21", "target": "22", "label": "VIP\nGIP", "weight": 2},
-    {"source": "2", "target": "6", "label": "Osteocalcin", "weight": 1},
-    {"source": "2", "target": "14", "label": "Osteocalcin", "weight": 1},
-    {"source": "31", "target": "15", "label": "hCG\nhPL\nEstrogen\nProgesterone", "weight": 4},
-    {"source": "31", "target": "13", "label": "hCG", "weight": 1},
-    {"source": "22", "target": "18", "label": "Thrombopoietin\nAngiotensinogen", "weight": 2},
-    {"source": "22", "target": "6", "label": "IGF-1", "weight": 1},
-    {"source": "22", "target": "3", "label": "IGF-1", "weight": 1},
-    {"source": "5", "target": "34", "label": "Oxytocin", "weight": 1},
-    {"source": "5", "target": "32", "label": "Oxytocin", "weight": 1},
-    {"source": "9", "target": "28", "label": "Prolactin", "weight": 1}
+    {
+      "source": "5",
+      "target": "9",
+      "label": "CRH\nGHRH\nTRH\nDopamine\nSomatostatin\nGnRH",
+      "weight": 6
+    },
+    { "source": "5", "target": "3", "label": "Oxytocin\nADH", "weight": 2 },
+    { "source": "9", "target": "11", "label": "TSH", "weight": 1 },
+    { "source": "9", "target": "13", "label": "ACTH", "weight": 1 },
+    {
+      "source": "9",
+      "target": "15",
+      "label": "FSH\nLH\nProlactin",
+      "weight": 3
+    },
+    {
+      "source": "9",
+      "target": "16",
+      "label": "FSH\nLH\nProlactin",
+      "weight": 3
+    },
+    { "source": "9", "target": "6", "label": "Growth Hormone", "weight": 1 },
+    { "source": "9", "target": "22", "label": "Growth Hormone", "weight": 1 },
+    { "source": "9", "target": "34", "label": "Prolactin", "weight": 1 },
+    {
+      "source": "11",
+      "target": "3",
+      "label": "Thyroxine (T4)\nTriiodothyronine (T3)\nReverse T3",
+      "weight": 3
+    },
+    { "source": "11", "target": "6", "label": "Thyroid Hormones", "weight": 1 },
+    {
+      "source": "11",
+      "target": "17",
+      "label": "Thyroid Hormones",
+      "weight": 1
+    },
+    { "source": "11", "target": "1", "label": "Thyroid Hormones", "weight": 1 },
+    { "source": "11", "target": "2", "label": "Calcitonin", "weight": 1 },
+    {
+      "source": "12",
+      "target": "2",
+      "label": "Parathyroid Hormone (PTH)",
+      "weight": 1
+    },
+    {
+      "source": "12",
+      "target": "23",
+      "label": "Parathyroid Hormone (PTH)",
+      "weight": 1
+    },
+    {
+      "source": "13",
+      "target": "17",
+      "label": "Epinephrine\nNorepinephrine",
+      "weight": 2
+    },
+    {
+      "source": "13",
+      "target": "6",
+      "label": "Epinephrine\nNorepinephrine\nCorticosteroids",
+      "weight": 3
+    },
+    {
+      "source": "13",
+      "target": "7",
+      "label": "Epinephrine\nNorepinephrine",
+      "weight": 2
+    },
+    {
+      "source": "13",
+      "target": "3",
+      "label": "Cortisol\nAldosterone\nCorticosteroids",
+      "weight": 3
+    },
+    { "source": "13", "target": "23", "label": "Aldosterone", "weight": 1 },
+    { "source": "13", "target": "1", "label": "Corticosteroids", "weight": 1 },
+    {
+      "source": "13",
+      "target": "15",
+      "label": "DHEA\nAndrostenedione",
+      "weight": 2
+    },
+    {
+      "source": "13",
+      "target": "16",
+      "label": "DHEA\nAndrostenedione",
+      "weight": 2
+    },
+    {
+      "source": "14",
+      "target": "6",
+      "label": "Insulin\nGlucagon",
+      "weight": 2
+    },
+    {
+      "source": "14",
+      "target": "7",
+      "label": "Insulin\nGlucagon",
+      "weight": 2
+    },
+    {
+      "source": "14",
+      "target": "22",
+      "label": "Insulin\nGlucagon\nSomatostatin",
+      "weight": 3
+    },
+    {
+      "source": "14",
+      "target": "3",
+      "label": "Insulin\nGlucagon\nAmylin",
+      "weight": 3
+    },
+    {
+      "source": "14",
+      "target": "1",
+      "label": "Insulin\nGlucagon",
+      "weight": 2
+    },
+    { "source": "14", "target": "9", "label": "Somatostatin", "weight": 1 },
+    {
+      "source": "15",
+      "target": "29",
+      "label": "Estrogen\nProgesterone\nTestosterone",
+      "weight": 3
+    },
+    {
+      "source": "15",
+      "target": "30",
+      "label": "Estrogen\nProgesterone",
+      "weight": 2
+    },
+    {
+      "source": "15",
+      "target": "31",
+      "label": "Estrogen\nProgesterone",
+      "weight": 2
+    },
+    {
+      "source": "15",
+      "target": "3",
+      "label": "Estrogen\nProgesterone",
+      "weight": 2
+    },
+    { "source": "15", "target": "2", "label": "Estrogen", "weight": 1 },
+    { "source": "15", "target": "32", "label": "Estrogen", "weight": 1 },
+    { "source": "15", "target": "33", "label": "Estrogen", "weight": 1 },
+    { "source": "15", "target": "9", "label": "Inhibin", "weight": 1 },
+    {
+      "source": "16",
+      "target": "25",
+      "label": "Testosterone\nInhibin",
+      "weight": 2
+    },
+    { "source": "16", "target": "24", "label": "Testosterone", "weight": 1 },
+    { "source": "16", "target": "3", "label": "Testosterone", "weight": 1 },
+    { "source": "16", "target": "6", "label": "Testosterone", "weight": 1 },
+    { "source": "16", "target": "2", "label": "Testosterone", "weight": 1 },
+    { "source": "16", "target": "26", "label": "Testosterone", "weight": 1 },
+    { "source": "16", "target": "27", "label": "Testosterone", "weight": 1 },
+    {
+      "source": "16",
+      "target": "28",
+      "label": "Testosterone\nDHT",
+      "weight": 2
+    },
+    { "source": "16", "target": "9", "label": "Inhibin", "weight": 1 },
+    { "source": "10", "target": "3", "label": "Melatonin", "weight": 1 },
+    {
+      "source": "19",
+      "target": "18",
+      "label": "Humoral factors\nThymosin\nThymopoietin",
+      "weight": 3
+    },
+    { "source": "23", "target": "18", "label": "Erythropoietin", "weight": 1 },
+    { "source": "23", "target": "17", "label": "Renin", "weight": 1 },
+    { "source": "23", "target": "13", "label": "Angiotensin", "weight": 1 },
+    { "source": "23", "target": "2", "label": "Calcitriol", "weight": 1 },
+    { "source": "17", "target": "23", "label": "ANP\nBNP", "weight": 2 },
+    {
+      "source": "1",
+      "target": "3",
+      "label": "Leptin\nAdiponectin\nPAI-1",
+      "weight": 3
+    },
+    {
+      "source": "1",
+      "target": "14",
+      "label": "Leptin\nAdiponectin",
+      "weight": 2
+    },
+    {
+      "source": "1",
+      "target": "6",
+      "label": "Leptin\nAdiponectin",
+      "weight": 2
+    },
+    { "source": "20", "target": "14", "label": "Gastrin", "weight": 1 },
+    {
+      "source": "21",
+      "target": "14",
+      "label": "Secretin\nCCK\nVIP\nGIP\nSomatostatin\nGLP-1",
+      "weight": 5
+    },
+    {
+      "source": "21",
+      "target": "20",
+      "label": "Enterogastrone\nMotilin",
+      "weight": 2
+    },
+    { "source": "20", "target": "3", "label": "Ghrelin", "weight": 1 },
+    { "source": "21", "target": "9", "label": "Somatostatin", "weight": 1 },
+    { "source": "21", "target": "22", "label": "VIP\nGIP", "weight": 2 },
+    { "source": "2", "target": "6", "label": "Osteocalcin", "weight": 1 },
+    { "source": "2", "target": "14", "label": "Osteocalcin", "weight": 1 },
+    {
+      "source": "31",
+      "target": "15",
+      "label": "hCG\nhPL\nEstrogen\nProgesterone",
+      "weight": 4
+    },
+    { "source": "31", "target": "13", "label": "hCG", "weight": 1 },
+    {
+      "source": "22",
+      "target": "18",
+      "label": "Thrombopoietin\nAngiotensinogen",
+      "weight": 2
+    },
+    { "source": "22", "target": "6", "label": "IGF-1", "weight": 1 },
+    { "source": "22", "target": "3", "label": "IGF-1", "weight": 1 },
+    { "source": "5", "target": "34", "label": "Oxytocin", "weight": 1 },
+    { "source": "5", "target": "32", "label": "Oxytocin", "weight": 1 },
+    { "source": "9", "target": "28", "label": "Prolactin", "weight": 1 }
   ]
 }

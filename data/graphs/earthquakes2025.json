@@ -1,5 +1,4 @@
 {
-  "directed": 1,
   "nodes": [
     { "id": "Earthquakes", "parent": null, "type": "cluster" },
 
