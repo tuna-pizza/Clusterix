@@ -32,6 +32,10 @@ export class HierarchicallyClusteredGraphDrawer {
     this.edgeColors = null;
     this.doubleEdgeMap = new Map();
 
+    // Cache for cluster weights
+    this.clusterWeights = new Map();
+    this.maxClusterWeight = 0;
+
     this.H.edges.forEach((edge) => {
       const forwardId = `${edge.source.getID()},${edge.target.getID()}`;
       // Check if the reverse edge exists in the graph data structure (H)
@@ -51,6 +55,8 @@ export class HierarchicallyClusteredGraphDrawer {
       this.edgeDisplayMode = e.detail.mode;
       this.redrawAdjacencyCells();
       this.drawAdjCellColorLegend();
+      this.updateNodeColoring();
+      this.drawNodeCellColorLegend();
     });
 
     window.addEventListener("labelSizeChange", (e) => {
@@ -112,6 +118,130 @@ export class HierarchicallyClusteredGraphDrawer {
         "var(--cluster-node-color-high)",
       ])
       .clamp(true);
+  }
+
+  getSafeEdgeWeight(edge) {
+    if (!edge || !edge.getWeight) return 1;
+    const w = edge.getWeight();
+    if (w === null || w === undefined || w === "") return 1;
+    const val = parseFloat(w);
+    return isNaN(val) ? 1 : val;
+  }
+
+  calculateAllClusterWeights() {
+    this.clusterWeights = new Map();
+    this.maxClusterWeight = 0;
+
+    // Initialize all clusters to 0
+    this.H.getNodes().forEach((n) => {
+      if (n.getNodeType() === "Cluster") {
+        this.clusterWeights.set(n.getID(), 0);
+      }
+    });
+
+    // 1. Process Edges (Existing Logic)
+    const edges = this.H.getEdges();
+    const isDirected = this.H.getIsDirected();
+    const processedPairs = new Set();
+
+    edges.forEach((edge) => {
+      const s = edge.source;
+      const t = edge.target;
+
+      // Handle undirected double counting logic
+      if (!isDirected) {
+        const sid = s.getID();
+        const tid = t.getID();
+        const canonical = sid < tid ? `${sid},${tid}` : `${tid},${sid}`;
+        if (processedPairs.has(canonical)) return;
+        processedPairs.add(canonical);
+      }
+
+      const w = this.getSafeEdgeWeight(edge);
+
+      // Find LCA (Lowest Common Ancestor) of s and t to attribute weight correctly
+      const sAncestors = new Set();
+      let curr = s;
+      while (curr) {
+        sAncestors.add(curr);
+        curr = curr.getParent();
+      }
+
+      let lca = null;
+      curr = t;
+      while (curr) {
+        if (sAncestors.has(curr)) {
+          lca = curr;
+          break;
+        }
+        curr = curr.getParent();
+      }
+
+      // Add weight to LCA and all its parents
+      if (lca) {
+        let runner = lca;
+        while (runner) {
+          if (runner.getNodeType() === "Cluster") {
+            const currentW = this.clusterWeights.get(runner.getID()) || 0;
+            this.clusterWeights.set(
+              runner.getID(),
+              parseFloat((currentW + w).toFixed(2))
+            );
+          }
+          runner = runner.getParent();
+        }
+      }
+    });
+
+    // 2. Process Nodes (New Logic)
+    // Iterate over all leaf nodes (Vertices)
+    this.H.getVertices().forEach((node) => {
+      let nodeWeight = 0;
+
+      // Check if node has a weight
+      if (typeof node.getWeight === "function") {
+        const raw = node.getWeight();
+        if (raw !== null && raw !== undefined && raw !== "") {
+          const val = parseFloat(raw);
+          if (!isNaN(val)) {
+            nodeWeight = val;
+          }
+        }
+      }
+
+      // If weight > 0, propagate it up to all ancestor clusters
+      if (nodeWeight !== 0) {
+        let parent = node.getParent();
+        while (parent) {
+          if (parent.getNodeType() === "Cluster") {
+            const currentW = this.clusterWeights.get(parent.getID()) || 0;
+            this.clusterWeights.set(
+              parent.getID(),
+              parseFloat((currentW + nodeWeight).toFixed(2))
+            );
+          }
+          parent = parent.getParent();
+        }
+      }
+    });
+
+    // 3. Determine max weight for scaling, EXCLUDING THE ROOT
+    this.maxClusterWeight = 0;
+
+    for (const [id, weight] of this.clusterWeights) {
+      const node = this.H.getNodeByID(id);
+
+      // Check if node exists and has a parent.
+      // If node.getParent() is null, it is the Root, so we skip it.
+      if (node && node.getParent() !== null) {
+        if (weight > this.maxClusterWeight) {
+          this.maxClusterWeight = weight;
+        }
+      }
+    }
+
+    // Fallback if max is 0 (e.g. empty graph or weights are 0)
+    if (this.maxClusterWeight === 0) this.maxClusterWeight = 1;
   }
 
   hasNumericEdgeLabels() {
@@ -426,11 +556,6 @@ export class HierarchicallyClusteredGraphDrawer {
     const children = cluster.getChildren();
     stats.directChildren = children.length;
 
-    // Count child clusters (non-leaf children)
-    stats.childClusters = children.filter(
-      (child) => child.getChildren && child.getChildren().length > 0
-    ).length;
-
     // Count total descendants (all nodes in this cluster's subtree)
     const countDescendants = (node) => {
       let count = 1; // count self
@@ -443,25 +568,64 @@ export class HierarchicallyClusteredGraphDrawer {
     };
     stats.totalDescendants = countDescendants(cluster) - 1; // exclude self
 
-    // Calculate edges within this cluster and edges going out
     const allEdges = this.H.getEdges();
-    const leafIdsInCluster = new Set(
-      leavesInCluster.map((leaf) => leaf.getID())
-    );
 
-    allEdges.forEach((edge) => {
+    // --- 2. Identify the true Bottommost Matrices (The Farthest Descendant Clusters) ---
+    // If the cluster itself is a bottommost cluster, it contains all the base nodes.
+    const deepestDescendants = findBottommostClusters(cluster);
+
+    // If the cluster is a leaf, it has no relevant bottommost clusters to define internal/external edges.
+    if (deepestDescendants.length === 0) {
+      return stats;
+    }
+
+    // Map: Base Node ID -> Index of the bottommost matrix it belongs to.
+    const nodeToMatrixIndexMap = new Map();
+
+    // An array of the sets of leaf IDs, one for each bottommost matrix found.
+    const bottommostMatrixSets = [];
+
+    for (let i = 0; i < deepestDescendants.length; i++) {
+      const matrixCluster = deepestDescendants[i];
+      const baseNodes = matrixCluster.getLeaves(); // Base nodes (leaves) of this matrix
+
+      const matrixSet = new Set();
+      baseNodes.forEach((node) => {
+        const nodeId = node.getID();
+        matrixSet.add(nodeId);
+        // This map links a base node ID directly to the index of its bottommost matrix
+        nodeToMatrixIndexMap.set(nodeId, i);
+      });
+      bottommostMatrixSets.push(matrixSet);
+    }
+
+    // --- 3. Main Edge Iteration and Classification ---
+    for (const edge of allEdges) {
       const sourceId = edge.getSource().getID();
       const targetId = edge.getTarget().getID();
 
-      const sourceInCluster = leafIdsInCluster.has(sourceId);
-      const targetInCluster = leafIdsInCluster.has(targetId);
+      // Get the index of the bottommost matrix for each endpoint
+      const sourceMatrixIndex = nodeToMatrixIndexMap.get(sourceId);
+      const targetMatrixIndex = nodeToMatrixIndexMap.get(targetId);
 
-      if (sourceInCluster && targetInCluster) {
+      // The edge must have both endpoints in a bottommost matrix that is a descendant of the cluster.
+      if (sourceMatrixIndex === undefined || targetMatrixIndex === undefined) {
+        // Edge leaves the bottommost hierarchy defined by this cluster (e.g., it leaves the main cluster).
+        continue;
+      }
+
+      // Rule 1: internalEdges (Adjacency Cells)
+      // Edge connects two nodes inside the SAME bottommost matrix.
+      if (sourceMatrixIndex === targetMatrixIndex) {
         stats.internalEdges++;
-      } else if (sourceInCluster || targetInCluster) {
+      }
+      // Rule 2: externalEdges (Curves)
+      // Edge connects two nodes inside two DIFFERENT bottommost matrices.
+      else {
+        // sourceMatrixIndex !== targetMatrixIndex
         stats.externalEdges++;
       }
-    });
+    }
 
     return stats;
   }
@@ -503,11 +667,10 @@ export class HierarchicallyClusteredGraphDrawer {
         <div style="margin-bottom: 8px;"><strong>Cluster: ${stats.clusterId}</strong></div>
         <div style="margin-left: 10px;">
             <div style="margin-bottom: 4px;">• Children: ${stats.directChildren}</div>
-            <div style="margin-bottom: 4px;">• Child Clusters: ${stats.childClusters}</div>
-            <div style="margin-bottom: 4px;">• Total Leaves: ${stats.totalLeavesInCluster}</div>
-            <div style="margin-bottom: 4px;">• Total Nodes: ${stats.totalDescendants}</div>
-            <div style="margin-bottom: 4px;">• Internal Edges: ${stats.internalEdges}</div>
-            <div style="margin-bottom: 4px;">• External Edges: ${stats.externalEdges}</div>
+            <div style="margin-bottom: 4px;">• Total leaves: ${stats.totalLeavesInCluster}</div>
+            <div style="margin-bottom: 4px;">• Total nodes: ${stats.totalDescendants}</div>
+            <div style="margin-bottom: 4px;">• Intra-cluster edges: ${stats.internalEdges}</div>
+            <div style="margin-bottom: 4px;">• Inter-cluster edges: ${stats.externalEdges}</div>
         </div>
     `;
 
@@ -621,17 +784,24 @@ export class HierarchicallyClusteredGraphDrawer {
     // Add hover events for cluster statistics AND CLICK for background reset
     clusterHitArea
       .on("mouseover", (event) => {
-        // --- Only show stats if the cluster is relevant (visible) ---
-        // We check the computed opacity of the sibling label.
-        // If it's faded (opacity ~0.2), we ignore the hover.
+        // --- 1. Ignore hover if this cluster label is faded ---
         const parentGroup = d3.select(event.currentTarget.parentNode);
         const label = parentGroup.select(".cluster-label");
         const currentOpacity = label.style("opacity");
+        if (currentOpacity && parseFloat(currentOpacity) < 0.5) return;
 
-        if (currentOpacity && parseFloat(currentOpacity) < 0.5) {
-          return;
+        // --- 2. CHECK LOCKS via listeners module ---
+        const lockedCluster = listeners.getLockedCluster();
+        // If another cluster is locked, ignore this hover completely
+        if (lockedCluster && lockedCluster !== cluster) return;
+
+        // --- 3. Only apply visual highlight if NO lock is active ---
+        // (If THIS cluster is locked, visuals are already set, so we skip this)
+        if (!listeners.isAnyLockActive()) {
+          listeners.mouseEntersClusterHitArea(cluster);
         }
 
+        // --- 4. popup + label resizing logic ---
         const stats = this.calculateClusterStatistics(cluster);
         const [x, y] = d3.pointer(event, document.body);
         this.showClusterStatsPopup(cluster, stats, x, y);
@@ -641,13 +811,24 @@ export class HierarchicallyClusteredGraphDrawer {
           .duration(200)
           .attr("font-size", window.currentLabelSize + 1 || 16);
       })
-      .on("mouseout", () => {
+      .on("mouseleave", () => {
+        // Hide popup
         this.hideClusterStatsPopup();
 
+        // Restore label size
         clusterLabel
           .transition()
           .duration(200)
           .attr("font-size", window.currentLabelSize || 15);
+
+        // If a lock is active, DO NOT restore visuals
+        if (listeners.isAnyLockActive()) {
+          return;
+        }
+
+        // Fully restore the graph
+        this.updateNodeColoring();
+        listeners.restoreGraphVisuals();
       })
       .on("mousemove", (event) => {
         const [x, y] = d3.pointer(event, document.body);
@@ -657,7 +838,9 @@ export class HierarchicallyClusteredGraphDrawer {
             .style("top", y - 10 + "px");
         }
       })
-      .on("click", listeners.backgroundClicked);
+      .on("click", (event) => {
+        listeners.clusterClicked(event, cluster);
+      });
 
     // Build adjacencyData and attach the underlying Edge's label/color if any
     const adjacencyData = [];
@@ -717,6 +900,59 @@ export class HierarchicallyClusteredGraphDrawer {
         edgeColors.push(edgeColor1);
         edgeColors.push(edgeColor2);
 
+        // 1. Get leaves
+        const sourceLeaves = src.getLeaves();
+        const targetLeaves = tgt.getLeaves();
+        const leafIDsSource = new Set(sourceLeaves.map((n) => n.getID()));
+        const leafIDsTarget = new Set(targetLeaves.map((n) => n.getID()));
+
+        // 2. Filter edges between clusters
+        const allEdgesBetweenClusters = allGraphEdges.filter((edge) => {
+          const sID = edge.source.getID();
+          const tID = edge.target.getID();
+          const cond1 = leafIDsSource.has(sID) && leafIDsTarget.has(tID);
+          const cond2 = leafIDsSource.has(tID) && leafIDsTarget.has(sID);
+          return cond1 || cond2;
+        });
+
+        // 3. Count unique pairs (for Ratio calculation)
+        const uniquePairs = new Set();
+        allEdgesBetweenClusters.forEach((edge) => {
+          const sourceId = edge.source.getID();
+          const targetId = edge.target.getID();
+          const canonicalId =
+            Math.min(sourceId, targetId) + "," + Math.max(sourceId, targetId);
+          uniquePairs.add(canonicalId);
+        });
+        const actualEdges = uniquePairs.size;
+
+        // 4. Calculate Total Weight (Sum of weights)
+        let totalWeight = 0;
+
+        if (isDirected) {
+          // Directed: Sum weight of every edge found
+          allEdgesBetweenClusters.forEach((edge) => {
+            totalWeight += this.getSafeEdgeWeight(edge);
+          });
+        } else {
+          // Undirected: Avoid double counting reverse representation
+          const processedPairs = new Set();
+          allEdgesBetweenClusters.forEach((edge) => {
+            const s = edge.source.getID();
+            const t = edge.target.getID();
+            const canon = s < t ? s + "," + t : t + "," + s;
+
+            // Only add weight once per canonical pair
+            if (!processedPairs.has(canon)) {
+              totalWeight += this.getSafeEdgeWeight(edge);
+              processedPairs.add(canon);
+            }
+          });
+        }
+
+        // Ensure rounding to avoid floating point ugliness (optional, max 1 decimal usually fine for weights)
+        totalWeight = parseFloat(totalWeight.toFixed(2));
+
         adjacencyData.push({
           source: src,
           target: tgt,
@@ -730,6 +966,9 @@ export class HierarchicallyClusteredGraphDrawer {
           edge_t_to_s: edge_t_to_s,
           isLastLevel: isLastLevel,
           isDirected: isDirected,
+          actualEdges: actualEdges, // Used for ratio
+          totalWeight: totalWeight, // Used for absolute mode
+          potentialEdges: src.getLeaves().length * tgt.getLeaves().length,
         });
       }
     }
@@ -760,61 +999,31 @@ export class HierarchicallyClusteredGraphDrawer {
     adjCells.each((d, i, nodes) => {
       const adjCell = d3.select(nodes[i]);
 
-      // 1. Get the leaves that belong to the source and target clusters
-      const sourceLeaves = d.source.getLeaves();
-      const targetLeaves = d.target.getLeaves();
-      const leafIDsSource = new Set(sourceLeaves.map((n) => n.getID()));
-      const leafIDsTarget = new Set(targetLeaves.map((n) => n.getID()));
-
-      // 2. Filter ALL graph edges (this.H.edges) to find those spanning the two clusters.
-      const allEdgesBetweenClusters = this.H.edges.filter((edge) => {
-        const sID = edge.source.getID();
-        const tID = edge.target.getID();
-
-        // Check if one endpoint is in the source cluster AND the other is in the target cluster (in either direction).
-        const cond1 = leafIDsSource.has(sID) && leafIDsTarget.has(tID);
-        const cond2 = leafIDsSource.has(tID) && leafIDsTarget.has(sID);
-
-        return cond1 || cond2;
-      });
-
-      // 3. Deduplicate the filtered edges
-      const uniquePairs = new Set();
-      allEdgesBetweenClusters.forEach((edge) => {
-        const sourceId = edge.source.getID();
-        const targetId = edge.target.getID();
-
-        // Create a canonical ID (smaller ID first) to treat multiple edges/directions between the same pair as one.
-        const canonicalId =
-          Math.min(sourceId, targetId) + "," + Math.max(sourceId, targetId);
-        uniquePairs.add(canonicalId);
-      });
-
-      // actualEdges now holds the count of unique edge pairs (absolute count)
-      const actualEdges = uniquePairs.size;
-      const potentialEdges =
-        d.source.getLeaves().length * d.target.getLeaves().length;
-
-      d.actualEdges = actualEdges;
-      d.potentialEdges = potentialEdges;
+      const actualEdges = d.actualEdges;
+      const totalWeight = d.totalWeight;
+      const potentialEdges = d.potentialEdges;
 
       const colorByAbsolute = this.edgeDisplayMode === "absolute";
 
       // Compute color value
       let colorValue = colorByAbsolute
-        ? actualEdges
+        ? totalWeight
         : potentialEdges > 0
         ? actualEdges / potentialEdges
         : 0;
 
       let colorScale;
       if (colorByAbsolute) {
-        const maxEdges = d3.max(adjacencyData, (d) =>
-          this.H.getNumberOfEdges(d.source, d.target)
-        );
+        // Find max weight in current data context (or global context if preferred,
+        // but drawCluster builds local data. Redraw calculates global.)
+        // For initial draw, this local max is okay, but `redrawAdjacencyCells` handles it better globally.
+        // We'll trust `redrawAdjacencyCells` to fix global consistency on toggle,
+        // but for initial load, let's just use the current batch max.
+        const maxVal = d3.max(adjacencyData, (d) => d.totalWeight) || 1;
+
         colorScale = d3
           .scaleLinear()
-          .domain([0, maxEdges])
+          .domain([0, maxVal])
           .range([resolvedAdjColorLow, resolvedAdjColorHigh]);
       } else {
         colorScale = d3
@@ -984,13 +1193,11 @@ export class HierarchicallyClusteredGraphDrawer {
           // Case 2: Higher-level matrix cell (Fallback for all higher layers)
           else {
             // Fallback to ratio/absolute for higher layers
-            const actualEdges = d.actualEdges;
-            const potentialEdges = d.potentialEdges;
             const ratio = actualEdges / potentialEdges;
             const colorByAbsolute = this.edgeDisplayMode === "absolute";
 
             return colorByAbsolute
-              ? `${actualEdges}`
+              ? `${totalWeight}`
               : `${parseFloat(ratio.toFixed(2))}`; //`${actualEdges}/${potentialEdges}`;
           }
         });
@@ -1043,6 +1250,12 @@ export class HierarchicallyClusteredGraphDrawer {
   }
 
   redrawAdjacencyCells() {
+    let maxGlobalWeight = 0;
+    d3.selectAll(".adjacency-cell").each((d) => {
+      if (!d.isLastLevel && d.totalWeight > maxGlobalWeight) {
+        maxGlobalWeight = d.totalWeight;
+      }
+    });
     d3.selectAll(".adjacency-cell").each((d, i, nodes) => {
       if (d.isLastLevel) {
         return;
@@ -1051,10 +1264,11 @@ export class HierarchicallyClusteredGraphDrawer {
       const adjCell = d3.select(nodes[i]);
       const actualEdges = d.actualEdges;
       const potentialEdges = d.potentialEdges;
+      const totalWeight = d.totalWeight; // Use updated data property
 
       const colorByAbsolute = this.edgeDisplayMode === "absolute";
       const value = colorByAbsolute
-        ? actualEdges
+        ? totalWeight
         : potentialEdges > 0
         ? actualEdges / potentialEdges
         : 0;
@@ -1068,17 +1282,7 @@ export class HierarchicallyClusteredGraphDrawer {
         .trim();
       const colorScale = d3
         .scaleLinear()
-        .domain(
-          colorByAbsolute
-            ? [
-                0,
-                d3.max(
-                  d3.selectAll(".adjacency-cell").data(),
-                  (c) => c.actualEdges
-                ),
-              ]
-            : [0, 1]
-        )
+        .domain(colorByAbsolute ? [0, Math.max(maxGlobalWeight, 1)] : [0, 1])
         .range([resolvedAdjColorLow, resolvedAdjColorHigh]);
       const cellColor = value === 0 ? "rgb(255,255,255)" : colorScale(value);
 
@@ -1091,7 +1295,7 @@ export class HierarchicallyClusteredGraphDrawer {
         .select("text")
         .attr("fill", "transparent") //textColor)
         .text(
-          colorByAbsolute ? `${actualEdges}` : `${parseFloat(ratio.toFixed(2))}` //`${actualEdges}/${potentialEdges}`
+          colorByAbsolute ? `${totalWeight}` : `${parseFloat(ratio.toFixed(2))}` //`${actualEdges}/${potentialEdges}`
         );
     });
   }
@@ -1390,6 +1594,8 @@ export class HierarchicallyClusteredGraphDrawer {
     }
 
     this.computeEdgeColors();
+
+    this.calculateAllClusterWeights();
 
     const numVertices = this.nodeOrder.length;
     const clusterLayers = this.H.getClusterLayers(false);
@@ -2296,8 +2502,8 @@ export class HierarchicallyClusteredGraphDrawer {
     // Initialize min/max values safely
     let minRatio = Infinity;
     let maxRatio = -Infinity;
-    let minAbsolute = Infinity;
-    let maxAbsolute = -Infinity;
+    let minWeight = Infinity;
+    let maxWeight = -Infinity;
     let foundCells = false;
 
     // Use D3 to select all currently drawn adjacency cells and extract their data
@@ -2308,14 +2514,13 @@ export class HierarchicallyClusteredGraphDrawer {
         foundCells = true;
 
         // 1. Update Absolute Counts (actualEdges)
-        const absoluteValue = d.actualEdges;
-        minAbsolute = Math.min(minAbsolute, absoluteValue);
-        maxAbsolute = Math.max(maxAbsolute, absoluteValue);
+        const weight = d.totalWeight || 0;
+        minWeight = Math.min(minWeight, weight);
+        maxWeight = Math.max(maxWeight, weight);
 
         // 2. Update Ratio Values (ratio)
-        // Ensure ratio is a valid number before comparing
-        if (d.ratio !== undefined && !isNaN(d.ratio)) {
-          const ratioValue = d.ratio;
+        if (d.actualEdges !== undefined && d.potentialEdges > 0) {
+          const ratioValue = d.actualEdges / d.potentialEdges;
           minRatio = Math.min(minRatio, ratioValue);
           maxRatio = Math.max(maxRatio, ratioValue);
         }
@@ -2330,8 +2535,8 @@ export class HierarchicallyClusteredGraphDrawer {
         maxRatio: maxRatio === -Infinity ? 1 : maxRatio,
 
         // If no absolute counts were found, default to 0
-        minAbsolute: minAbsolute === Infinity ? 0 : minAbsolute,
-        maxAbsolute: maxAbsolute === -Infinity ? 0 : maxAbsolute,
+        minAbsolute: minWeight === Infinity ? 0 : minWeight,
+        maxAbsolute: maxWeight === -Infinity ? 0 : maxWeight,
       };
     } else {
       // If no cells were found (e.g., empty graph), return null
@@ -2685,24 +2890,11 @@ export class HierarchicallyClusteredGraphDrawer {
     const toggle = document.getElementById("edge-display-toggle");
     const colorByAbsolute = toggle ? toggle.checked : false;
 
-    // Calculate Domain (Max Edges) to set currentMax
-    let maxEdges = 0;
-    if (colorByAbsolute) {
-      this.H.getNodes().forEach((n) => {
-        if (n.getNodeType() === NodeType.Cluster && n.getParent()) {
-          const stats = this.H.getIntraClusterStats(n);
-          if (stats.actualEdges > maxEdges) maxEdges = stats.actualEdges;
-        }
-      });
-    }
+    // Use calculated weights for max value in Weight (Absolute) mode
     const currentMin = 0;
-    const currentMax = colorByAbsolute ? Math.max(maxEdges, 1) : 1;
+    const currentMax = colorByAbsolute ? Math.max(this.maxClusterWeight, 1) : 1;
 
-    // // --- 1. Title ---
-    // const titleText = `Cluster Node Intra-Edges`;
-    // container.append("div").text(titleText).style("font-weight", "bold");
-
-    // --- 2. SVG for Gradient Bar ---
+    // ---  SVG for Gradient Bar ---
     const svg = container
       .append("svg")
       .attr("width", barWidth)
@@ -2767,21 +2959,7 @@ export class HierarchicallyClusteredGraphDrawer {
     const scale = d3.scaleLinear().range([colorLow, colorHigh]).clamp(true);
 
     if (isAbsolute) {
-      let maxEdges = 0;
-      // Check if stats are available
-      if (
-        this.H &&
-        typeof this.H.getNodes === "function" &&
-        typeof this.H.getIntraClusterStats === "function"
-      ) {
-        this.H.getNodes().forEach((n) => {
-          if (n.getNodeType() === "Cluster") {
-            const stats = this.H.getIntraClusterStats(n);
-            if (stats.actualEdges > maxEdges) maxEdges = stats.actualEdges;
-          }
-        });
-      }
-      scale.domain([0, Math.max(maxEdges, 1)]);
+      scale.domain([0, Math.max(this.maxClusterWeight, 1)]);
     } else {
       scale.domain([0, 1]); // Ratio mode uses a 0 to 1 domain
     }
@@ -2800,8 +2978,15 @@ export class HierarchicallyClusteredGraphDrawer {
 
     // Use the utility to get the scale
     const scale = this.getClusterNodeColorScale(isAbsolute);
-    const stats = this.H.getIntraClusterStats(nodeData);
-    const value = isAbsolute ? stats.actualEdges : stats.ratio;
+    let value;
+    if (isAbsolute) {
+      // --- LOGIC CHANGE: Use the pre-calculated total weight ---
+      value = this.clusterWeights.get(nodeData.getID()) || 0;
+    } else {
+      const stats = this.H.getIntraClusterStats(nodeData);
+      value = stats.ratio;
+    }
+
     let finalColor = scale(value);
 
     // Apply zero-value override
@@ -2820,8 +3005,13 @@ export class HierarchicallyClusteredGraphDrawer {
     const toggle = document.getElementById("edge-display-toggle");
     const isAbsolute = toggle ? toggle.checked : false;
 
-    const stats = this.H.getIntraClusterStats(nodeData);
-    const value = isAbsolute ? stats.actualEdges : stats.ratio;
+    let value;
+    if (isAbsolute) {
+      value = this.clusterWeights.get(nodeData.getID()) || 0;
+    } else {
+      const stats = this.H.getIntraClusterStats(nodeData);
+      value = stats.ratio;
+    }
 
     // Format the value: integer for absolute, 2 decimals for ratio
     const formattedValue = isAbsolute
@@ -2841,4 +3031,38 @@ export class HierarchicallyClusteredGraphDrawer {
       value: value,
     };
   }
+}
+
+/**
+ * Recursively finds all "bottommost" clusters that are descendants of the given cluster.
+ * A bottommost cluster is defined here as a cluster whose direct children are all leaf nodes.
+ * @param {Node} clusterNode - The cluster to start searching from.
+ * @returns {Array<Node>} An array of cluster nodes at the bottommost level.
+ */
+function findBottommostClusters(clusterNode) {
+  if (!clusterNode.getChildren || clusterNode.getChildren().length === 0) {
+    // Not a cluster, or a leaf node itself
+    return [];
+  }
+
+  // Check if ALL immediate children are leaf nodes
+  const children = clusterNode.getChildren();
+  const allChildrenAreLeaves = children.every(
+    (child) => !child.getChildren || child.getChildren().length === 0
+  );
+
+  if (allChildrenAreLeaves) {
+    // This cluster's children are the actual base nodes (leaves),
+    // making this cluster the "bottommost matrix" container.
+    return [clusterNode];
+  }
+
+  // If not all children are leaves, recurse on the children that are still clusters
+  let bottommost = [];
+  for (const child of children) {
+    if (child.getChildren && child.getChildren().length > 0) {
+      bottommost = bottommost.concat(findBottommostClusters(child));
+    }
+  }
+  return bottommost;
 }
