@@ -627,6 +627,10 @@ export class HierarchicallyClusteredGraphDrawer {
       }
     }
 
+    for (const node of leavesInCluster) {
+      if (node.getWeight() && node.getWeight() != 0) stats.internalEdges++;
+    }
+
     return stats;
   }
 
@@ -2414,45 +2418,45 @@ export class HierarchicallyClusteredGraphDrawer {
       ) {
         const cellGroup = d3.select(this);
 
-        // Handle edge s (source) -> t (target)
-        if (d.edge_s_to_t) {
-          const weight = parseFloat(d.edge_s_to_t.getWeight());
-          const belowThreshold = !isNaN(weight) && weight < threshold;
-          const color = belowThreshold ? "white" : d.edge_s_to_t.edgeColor;
+        if (d.isDirected) {
+          // Handle edge s (source) -> t (target)
+          if (d.edge_s_to_t) {
+            const weight = parseFloat(d.edge_s_to_t.getWeight());
+            const belowThreshold = !isNaN(weight) && weight < threshold;
+            const color = belowThreshold ? "white" : d.edge_s_to_t.edgeColor;
 
-          // Select the polygon representing the s->t edge (best-effort selection, often the 3rd child polygon).
-          const sToTPoly = cellGroup.select("polygon:nth-child(3)");
-          if (!sToTPoly.empty()) {
-            sToTPoly.attr("fill", color);
+            // Select the polygon representing the s->t edge (best-effort selection, often the 3rd child polygon).
+            const sToTPoly = cellGroup.select("polygon:nth-child(3)");
+            if (!sToTPoly.empty()) {
+              sToTPoly.attr("fill", color);
+            }
           }
 
-          // If it's an undirected edge, both d.edge_s_to_t and d.edge_t_to_s either point to the same object or d.edge_t_to_s is null. In this case, both cell polygons must be the same color.
-          if (!d.edge_t_to_s || d.edge_s_to_t === d.edge_t_to_s) {
-            const tToSPoly = cellGroup.select("polygon:nth-child(1)");
+          // Handle edge t (target) -> s (source)
+          if (d.edge_t_to_s) {
+            const weight = parseFloat(d.edge_t_to_s.getWeight());
+            const belowThreshold = !isNaN(weight) && weight < threshold;
+            const color = belowThreshold ? "white" : d.edge_t_to_s.edgeColor;
+
+            // Select the polygon representing the t->s edge (best-effort selection, often the 4th child polygon).
+            const tToSPoly = cellGroup.select("polygon:nth-child(3)");
             if (!tToSPoly.empty()) {
               tToSPoly.attr("fill", color);
             }
           }
-        }
+        } else {
+          const edge =
+            d.matchingEdges[0] ||
+            d.matchingEdges[1] ||
+            d.edge_s_to_t ||
+            d.edge_t_to_s;
 
-        // Handle edge t (target) -> s (source)
-        if (d.edge_t_to_s) {
-          const weight = parseFloat(d.edge_t_to_s.getWeight());
-          const belowThreshold = !isNaN(weight) && weight < threshold;
-          const color = belowThreshold ? "white" : d.edge_t_to_s.edgeColor;
+          if (edge) {
+            const weight = parseFloat(edge.getWeight());
+            const belowThreshold = !isNaN(weight) && weight < threshold;
+            const color = belowThreshold ? "white" : edge.edgeColor;
 
-          // Select the polygon representing the t->s edge (best-effort selection, often the 4th child polygon).
-          const tToSPoly = cellGroup.select("polygon:nth-child(3)");
-          if (!tToSPoly.empty()) {
-            tToSPoly.attr("fill", color);
-          }
-
-          // If it's an undirected edge, both d.edge_s_to_t and d.edge_t_to_s either point to the same object or d.edge_t_to_s is null. In this case, both cell polygons must be the same color.
-          if (!d.edge_s_to_t || d.edge_s_to_t === d.edge_t_to_s) {
-            const sTotPoly = cellGroup.select("polygon:nth-child(1)");
-            if (!sTotPoly.empty()) {
-              sTotPoly.attr("fill", color);
-            }
+            cellGroup.select("polygon").attr("fill", color);
           }
         }
       }
