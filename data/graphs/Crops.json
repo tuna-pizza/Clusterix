@@ -483,6 +483,6 @@
     { "source": "46", "target": "2", "weight": 10 },
 
     { "source": "38", "target": "41", "weight": 10 },
-    { "source": "46", "target": "25", "weight": 10 }
+    { "source": "25", "target": "46", "weight": 10 }
   ]
 }
