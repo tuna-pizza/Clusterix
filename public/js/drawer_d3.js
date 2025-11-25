@@ -673,8 +673,8 @@ export class HierarchicallyClusteredGraphDrawer {
             <div style="margin-bottom: 4px;">• Children: ${stats.directChildren}</div>
             <div style="margin-bottom: 4px;">• Total leaves: ${stats.totalLeavesInCluster}</div>
             <div style="margin-bottom: 4px;">• Total nodes: ${stats.totalDescendants}</div>
-            <div style="margin-bottom: 4px;">• Intra-cluster edges: ${stats.internalEdges}</div>
-            <div style="margin-bottom: 4px;">• Inter-cluster edges: ${stats.externalEdges}</div>
+            <div style="margin-bottom: 4px;">• Cell-edges: ${stats.internalEdges}</div>
+            <div style="margin-bottom: 4px;">• Curve-edges: ${stats.externalEdges}</div>
         </div>
     `;
 
