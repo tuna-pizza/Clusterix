@@ -458,7 +458,7 @@
       "source": "21",
       "target": "14",
       "label": "Secretin\nCCK\nVIP\nGIP\nSomatostatin\nGLP-1",
-      "weight": 5
+      "weight": 6
     },
     {
       "source": "21",
@@ -491,3 +491,4 @@
     { "source": "9", "target": "28", "label": "Prolactin", "weight": 1 }
   ]
 }
+
