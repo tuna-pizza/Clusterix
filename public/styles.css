@@ -326,6 +326,16 @@ h1 {
 #custom-modal h2 {
   color: var(--color-secondary);
 }
+#error-modal h2 {
+  color: var(--color-secondary);
+}
+#error-modal {
+  background-color: var(--color-background-medium);
+  color: var(--color-text-header);
+  border: 1px solid var(--color-secondary);
+  font-family: var(--font-main);
+}
+
 #instance-id-input {
   border: 1px solid var(--color-secondary);
   background-color: var(--color-background-dark);
