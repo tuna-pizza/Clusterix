@@ -1,4 +1,5 @@
 from flask import Flask, send_from_directory, jsonify, request
+from werkzeug.exceptions import RequestEntityTooLarge
 import json
 import os
 import re
@@ -8,6 +9,32 @@ import io
 import networkx as nx
 
 print("=== STARTING SERVER ===")
+
+# --- Testing Gurobi ---
+def check_gurobi_license():
+    import gurobipy as gp
+    try:
+        # Initialize environment to query license info
+        env = gp.Env()
+        env.start()  # triggers license check
+
+        # Access the license info string
+        license_info = env._getParamInfo("LICENSEID")  # LICENSEID is numeric
+        # You can also try "LICENSEEXPIRATION" or "LICENSETYPE"
+        license_type = env._getParamInfo("LICENSETYPE")  # returns a string
+        
+        print("License type:", license_type)
+
+        # Treat non-commercial / academic licenses as invalid
+        if license_type == None:
+            return False
+
+        # If no issues, license is valid
+        return True
+
+    except gp.GurobiError as e:
+        print(f"Gurobi license check failed: {e}")
+        return False
 
 # --- Graph validation ---
 def validate_graph_structure(data):
@@ -67,29 +94,104 @@ sys.path.insert(0, current_dir)
 
 try:
     from ILP_solver import solve_layout_for_graph
-    print("✓ ILP Solver imported successfully")
+    if check_gurobi_license():
+        print("✓ ILP Solver imported successfully")
+    else:
+        try:
+            from ILP_solver_backup import solve_layout_for_graph
+            print("✓ Backup ILP Solver imported successfully")
+        except ImportError as e:
+            solve_layout_for_graph = None
+            print(f"✗ ILP Solver import failed: {e}")
 except ImportError as e:
-    print(f"✗ ILP Solver import failed: {e}")
+    try:
+        from ILP_solver_backup import solve_layout_for_graph
+        print("✓ Backup ILP Solver imported successfully")
+    except ImportError as e:
+        solve_layout_for_graph = None
+        print(f"✗ ILP Solver import failed: {e}")
 
 try:
     from heuristic_solver import solve_layout_for_graph_heuristic
     print("✓ Heuristic Solver imported successfully")
 except ImportError as e:
+    solve_layout_for_graph_heuristic = None
     print(f"✗ Heuristic Solver import failed: {e}")
 try:
     from hybrid_solver import solve_layout_for_graph_hybrid
     print("✓ Hybrid Solver imported successfully")
 except ImportError as e:
+    solve_layout_for_graph_hybrid = None
     print(f"✗ Hybrid Solver import failed: {e}")
+
+MAX_UPLOAD_SIZE_MB = 1       # maximum size of uploaded JSONs in megabytes
+MAX_USER_FILES = 1024        # how many uploaded user files to keep
 
 # --- Flask app ---
 app = Flask(__name__, static_folder="public")
+app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_SIZE_MB * 1024 * 1024  
+
+# Reject too big file uploads
+@app.errorhandler(RequestEntityTooLarge)
+def handle_large_file(e):
+    return jsonify({
+        "success": False,
+        "message": "The uploaded file is too large. Maximum allowed size is "+ MAX_UPLOAD_SIZE_MB +" MB."
+    }), 413
 
 GRAPH_DIR = os.path.abspath(os.path.join("data", "graphs"))
 ORDER_DIR = os.path.join("data", "order")
 os.makedirs(GRAPH_DIR, exist_ok=True)
 os.makedirs(ORDER_DIR, exist_ok=True)
 
+# Keep an index of user submitted files
+USER_INDEX_PATH = os.path.join("data", "user_index.json")
+def load_user_index():
+    """Load the list of user-uploaded filenames (in upload order)."""
+    if not os.path.exists(USER_INDEX_PATH):
+        return []
+    try:
+        with open(USER_INDEX_PATH, "r", encoding="utf-8") as f:
+            return json.load(f)
+    except Exception:
+        return []  # auto-repair if invalid
+
+def enforce_storage_limit_with_index(new_filename, limit=1024):
+    """
+    Append new_filename to index.
+    If index too long, delete oldest user file + its order files.
+    """
+    index = load_user_index()
+    index.append(new_filename)
+
+    # If we exceed the limit, delete the oldest files
+    while len(index) > limit:
+        old = index.pop(0)  # remove oldest filename
+
+        graph_path = os.path.join(GRAPH_DIR, old)
+        
+        # Remove the graph file if it still exists
+        if os.path.exists(graph_path):
+            os.remove(graph_path)
+
+        # Base name without extension
+        base = os.path.splitext(old)[0]
+
+        # Remove associated order files
+        for suffix in ["_ilp", "_heuristic", "_hybrid"]:
+            order_path = os.path.join(ORDER_DIR, f"{base}{suffix}.txt")
+            if os.path.exists(order_path):
+                os.remove(order_path)
+
+        print(f"Deleted old user file: {old}")
+
+    # Save updated index
+    save_user_index(index)
+
+def save_user_index(idx):
+    """Rewrite the user index file."""
+    with open(USER_INDEX_PATH, "w", encoding="utf-8") as f:
+        json.dump(idx, f, indent=2)
 
 # --- Helper: convert JSON graph to NetworkX DiGraph ---
 def dict_to_nx_graph(data):
@@ -199,6 +301,16 @@ def get_graph(instance):
     except Exception as e:
         return jsonify({"error": "Failed to load graph", "details": str(e)}), 500
 
+def get_solver_by_name(method):
+    mapping = {
+        "ilp": solve_layout_for_graph,
+        "heuristic": solve_layout_for_graph_heuristic,
+        "hybrid": solve_layout_for_graph_hybrid
+    }
+    solver = mapping.get(method)
+    if solver is None:
+        return None
+    return solver
 
 @app.route("/api/order/<instance>")
 def get_order(instance):
@@ -240,11 +352,6 @@ def get_order(instance):
         except Exception as e:
             return jsonify({"error": "Failed to get input order", "details": str(e)}), 500
 
-    # --- Original Solver Logic (Only runs if method is not 'input') ---
-    if method not in ["ilp", "heuristic", "hybrid"]:
-        # If the method is not 'input' (handled above) AND not a valid solver
-        return jsonify({"error": "Invalid method. Use 'input', 'ilp', 'heuristic', or 'hybrid'"}), 400
-
     # Assign suffix for pre-computed files
     if method == "heuristic":
         suffix = "_heuristic"
@@ -252,22 +359,32 @@ def get_order(instance):
         suffix = "_hybrid"
     else:  # ilp
         suffix = "_ilp"
-
     filepath = os.path.join(ORDER_DIR, f"{instance}{suffix}.txt")
-    try:
-        if os.path.isfile(filepath):
-            with open(filepath, "r", encoding="utf-8") as f:
-                order_string = f.read()
-        else:
-            order_string = generate_order(instance, method)
-            if order_string:
-                with open(filepath, "w", encoding="utf-8") as f:
-                    content_to_write = order_string if isinstance(order_string, str) else " ".join(order_string)
-                    f.write(content_to_write)
-            else:
-                return jsonify({"error": f"{method.capitalize()} solver failed"}), 500
-
+    
+    if os.path.isfile(filepath):
+        with open(filepath, "r", encoding="utf-8") as f:
+            order_string = f.read()
         return jsonify({"order": order_string, "method": method})
+
+    # --- Original Solver Logic (Only runs if method is not 'input') ---
+    if method not in ["ilp", "heuristic", "hybrid"]:
+        # If the method is not 'input' (handled above) AND not a valid solver
+        return jsonify({"error": "Invalid method. Use 'input', 'ilp', 'heuristic', or 'hybrid'"}), 400
+    
+    solver_func = get_solver_by_name(method)
+    if solver_func is None:
+        print("here")
+        return jsonify({"error": f"{method.capitalize()} solver is not available"}), 500
+    order_string = generate_order(instance, method)
+    try:
+        if order_string:
+            with open(filepath, "w", encoding="utf-8") as f:
+                content_to_write = order_string if isinstance(order_string, str) else " ".join(order_string)
+                f.write(content_to_write)
+            return jsonify({"order": order_string, "method": method})
+        else:
+            return jsonify({"error": f"{method.capitalize()} solver failed"}), 500
+  
 
     except Exception as e:
         return jsonify({"error": "Failed to get order", "details": str(e)}), 500
@@ -333,6 +450,7 @@ def upload_graph():
 
     try:
         file.save(save_path)
+        enforce_storage_limit_with_index(filename, limit=MAX_USER_FILES)
     except Exception as e:
         # Aufräumen, falls Teildatei entstanden ist
         if os.path.exists(save_path):
