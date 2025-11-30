@@ -383,7 +383,7 @@
               "
             >
               <h2 style="margin: 0; font-size: 1.4rem; text-color: &#x231B;">
-                <span>Server Error!</span>
+                <span>⚠️ Server Error!</span>
               </h2>
               <button
                 id="custom-error-close"
@@ -402,7 +402,7 @@
                   white-space: nowrap; /* Prevent text wrap */
                 "
               >
-                Cancel
+                Confirm
               </button>
 			  </div>
 			  <hr
@@ -664,6 +664,29 @@
     </div>
 
     <script>
+	function showErrorModal(message) {
+	  const popup = document.getElementById("error-popup");
+	  const modal = document.getElementById("error-modal");
+	  const msgSpan = document.getElementById("error-message");
+	  console.log(msgSpan);
+	  if (!modal || !msgSpan) return;
+
+	  msgSpan.textContent = message;
+	  modal.style.display = "block";
+	  popup.style.display = "block";
+	}
+
+	function hideErrorModal() {
+	  const popup = document.getElementById("error-popup");
+	  const modal = document.getElementById("error-modal");
+	  if (!modal) return;
+	  modal.style.display = "none";
+	  popup.style.display = "none";
+	}
+
+	const closeBtn = document.getElementById("custom-error-close");
+	if (closeBtn) closeBtn.addEventListener("click", hideErrorModal);
+
       // Function to handle all visualization downloads
       function saveVisualization(format) {
         // Directly search for the SVG element on the page
@@ -1170,7 +1193,7 @@
             const data = await res.json();
 
             if (!res.ok || !data.success) {
-              alert("Upload failed: " + (data.message || "Unknown error"));
+              showErrorModal("Upload failed: " + (data.message || "Unknown error"));
             } else {
               const instanceId = data.filename.replace(".json", "");
 
