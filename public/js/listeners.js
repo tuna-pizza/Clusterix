@@ -43,6 +43,8 @@ export function unlockAll(restoreVisuals = true) {
   lockedEdge = null;
   lockedClusterHover = null;
 
+  clearFrame();
+
   // Always clear tooltips
   d3.select(".edge-labels").selectAll(".edge-label, .adj-hover-label").remove();
   d3.selectAll(".label-background-rect").remove();
@@ -54,14 +56,79 @@ export function unlockAll(restoreVisuals = true) {
 }
 
 // Function to handle node clicks
-export function nodeClicked(event, data) {
+export function nodeClicked(event, data, cellSize) {
   event.stopPropagation();
 
-  unlockAll(false);
+  // 1. Check for Deselect: If we click the already locked node, unlock and return
+  if (lockedNode === data) {
+    unlockAll(true);
+    return;
+  }
 
+  if (isAnyLockActive()) {
+    const currentOpacity = d3.select(event.currentTarget).attr("opacity");
+    // Assuming elements are faded to < 0.5 (as is common in the hover logic)
+    if (currentOpacity !== null && parseFloat(currentOpacity) < 0.5) {
+      return; // Ignore click on faded element
+    }
+  }
+
+  // 2. Set new lock: Clear old lock/frame, set new lock
+  unlockAll(false); // Clears the previous frame via unlockAll
   lockedClusterHover = null;
-
   lockedNode = data;
+
+  // 3. Frame it in green: Insert a dedicated green rectangle
+  let frame_size = cellSize;
+
+  const cellElement = event.currentTarget;
+  const overlayGroup = d3.select(".edge-labels");
+
+  if (overlayGroup.empty()) {
+    console.error("Could not find required .edge-labels group for framing.");
+    return;
+  }
+
+  let transformedCenter;
+  try {
+    // Calculate the center point in the overlay's coordinate system
+    transformedCenter = getCenterInOverlayCoordinates(
+      cellElement,
+      overlayGroup
+    );
+  } catch (e) {
+    console.error(
+      "Failed to calculate transformed coordinates. Aborting frame.",
+      e
+    );
+    return;
+  }
+
+  const overlayX = transformedCenter.x;
+  const overlayY = transformedCenter.y;
+
+  // Append the group to the overlay layer (making it always on top)
+  overlayGroup
+    .append("g")
+    .attr("class", "selection-frame-group")
+    // Translate to the center point, then rotate 45 degrees around that center.
+    // The frame will be drawn globally on top.
+    .attr("transform", `translate(${overlayX}, ${overlayY}) rotate(45)`)
+
+    // Append the rect to the frame group
+    .append("rect")
+    .attr("class", "selection-frame")
+    // Position the rect relative to the (overlayX, overlayY) center point
+    .attr("x", -frame_size / 2)
+    .attr("y", -frame_size / 2)
+    .attr("width", frame_size)
+    .attr("height", frame_size)
+    .attr("fill", "none")
+    .attr("stroke", "#32CD32")
+    .attr("stroke-width", 6)
+    .attr("pointer-events", "none"); // Ensures clicks pass through to elements below
+
+  framedElement = event.currentTarget;
 
   // mark this as coming from a click:
   event.__fromClick__ = true;
@@ -75,14 +142,77 @@ export function backgroundClicked() {
 }
 
 // Function to handle adj cells clicks
-export function adjCellClicked(event, data) {
+export function adjCellClicked(event, data, cellSize) {
   event.stopPropagation(); // Prevent background click
 
-  unlockAll(false);
+  // 1. Check for Deselect: If we click the already locked cell, unlock and return
+  if (lockedAdj === data) {
+    unlockAll(true);
+    return;
+  }
 
+  if (isAnyLockActive()) {
+    const currentOpacity = d3.select(event.currentTarget).attr("opacity");
+    if (currentOpacity !== null && parseFloat(currentOpacity) < 0.5) {
+      return; // Ignore click on faded element
+    }
+  }
+
+  // 2. Set new lock: Clear old lock/frame, set new lock
+  unlockAll(false);
   lockedClusterHover = null;
 
-  lockedNode = data;
+  lockedAdj = data;
+
+  // 3. FRAME IT IN green: Insert a dedicated green rectangle
+  let frame_size = cellSize;
+
+  const cellElement = event.currentTarget;
+  const overlayGroup = d3.select(".edge-labels");
+
+  if (overlayGroup.empty()) {
+    console.error("Could not find required .edge-labels group for framing.");
+    return;
+  }
+
+  let transformedCenter;
+  try {
+    transformedCenter = getCenterInOverlayCoordinates(
+      cellElement,
+      overlayGroup
+    );
+  } catch (e) {
+    console.error(
+      "Failed to calculate transformed coordinates. Aborting frame.",
+      e
+    );
+    return;
+  }
+
+  const overlayX = transformedCenter.x;
+  const overlayY = transformedCenter.y;
+
+  // Append the group to the overlay layer (making it always on top)
+  overlayGroup
+    .append("g")
+    .attr("class", "selection-frame-group")
+    // Translate to the center point, then rotate 45 degrees around that center.
+    .attr("transform", `translate(${overlayX}, ${overlayY}) rotate(45)`)
+
+    // Append the rect to the frame group
+    .append("rect")
+    .attr("class", "selection-frame")
+    // Position the rect relative to the (overlayX, overlayY) center point
+    .attr("x", -frame_size / 2)
+    .attr("y", -frame_size / 2)
+    .attr("width", frame_size)
+    .attr("height", frame_size)
+    .attr("fill", "none")
+    .attr("stroke", "#32CD32")
+    .attr("stroke-width", 6)
+    .attr("pointer-events", "none");
+
+  framedElement = event.currentTarget;
 
   // mark this as coming from a click:
   event.__fromClick__ = true;
@@ -102,13 +232,74 @@ export function edgeClicked(
 ) {
   event.stopPropagation();
 
+  let frame_size = cellSize;
+  const overlayGroup = d3.select(".edge-labels");
+
+  // 1. Check for Deselect
+  if (lockedEdge === data) {
+    unlockAll(true);
+    return;
+  }
+
+  if (isAnyLockActive()) {
+    const currentOpacity = d3.select(event.currentTarget).attr("opacity");
+    if (currentOpacity !== null && parseFloat(currentOpacity) < 0.5) {
+      return; // Ignore click on faded element
+    }
+  }
+
+  // 2. Set new lock: Clear old locks/frames, set new lock
   unlockAll(false);
-
   lockedClusterHover = null;
+  lockedEdge = data;
 
-  lockedNode = data;
+  // 3. FRAME END-NODES: Helper function to frame a single node element
+  const frameNode = (nodeData) => {
+    const cellElement = findNodeCellElement(nodeData);
+    if (!cellElement) return;
 
-  // mark this as coming from a click:
+    let transformedCenter;
+    try {
+      // Must reuse getCenterInOverlayCoordinates (assumed to exist)
+      transformedCenter = getCenterInOverlayCoordinates(
+        cellElement,
+        overlayGroup
+      );
+    } catch (e) {
+      return;
+    }
+
+    const overlayX = transformedCenter.x;
+    const overlayY = transformedCenter.y;
+
+    // Get the global frame container group, or create it
+    let frameGroup = overlayGroup.select("g.selection-frame-group");
+    if (frameGroup.empty()) {
+      frameGroup = overlayGroup
+        .append("g")
+        .attr("class", "selection-frame-group");
+    }
+
+    frameGroup
+      .append("g")
+      .attr("transform", `translate(${overlayX}, ${overlayY}) rotate(45)`)
+      .append("rect")
+      .attr("class", "selection-frame")
+      .attr("x", -frame_size / 2)
+      .attr("y", -frame_size / 2)
+      .attr("width", frame_size)
+      .attr("height", frame_size)
+      .attr("fill", "none")
+      .attr("stroke", "#32CD32")
+      .attr("stroke-width", 6)
+      .attr("pointer-events", "none");
+  };
+
+  // Apply the framing to both end nodes
+  frameNode(data.getSource());
+  frameNode(data.getTarget());
+
+  // 4. Trigger hover visuals
   event.__fromClick__ = true;
 
   mouseEntersEdge(
@@ -143,9 +334,72 @@ export function clusterClicked(event, cluster) {
   mouseEntersClusterHitArea(cluster);
 }
 
+function clearFrame() {
+  // Target the high-level container (.edge-labels is assumed to be the highest layer)
+  const overlayGroup = d3.select(".edge-labels");
+
+  if (!overlayGroup.empty()) {
+    // Remove the previously created frame group by its class
+    overlayGroup.select("g.selection-frame-group").remove();
+  }
+
+  // Remove the old CSS class (safety measure)
+  d3.selectAll("g.node-cell, g.adjacency-cell").classed(
+    "selected-frame",
+    false
+  );
+}
+
+/**
+ * Calculates the center point of an SVG element in the coordinate system of a target overlay group.
+ */
+function getCenterInOverlayCoordinates(element, overlayGroup) {
+  // 1. Get the element's bounding box to find its local center
+  const bbox = element.getBBox();
+  const centerX = bbox.x + bbox.width / 2;
+  const centerY = bbox.y + bbox.height / 2;
+
+  // 2. Transform the local center point to screen coordinates
+  const pt = element.ownerSVGElement.createSVGPoint();
+  pt.x = centerX;
+  pt.y = centerY;
+  const screenPt = pt.matrixTransform(element.getScreenCTM());
+
+  // 3. Transform the screen coordinates into the overlay group's local coordinates
+  const overlayNode = overlayGroup.node();
+  const inv = overlayNode.getScreenCTM().inverse();
+  const svgPt = element.ownerSVGElement.createSVGPoint();
+  svgPt.x = screenPt.x;
+  svgPt.y = screenPt.y;
+
+  return svgPt.matrixTransform(inv); // Returns {x: overlayX, y: overlayY}
+}
+
+function findNodeCellElement(nodeData) {
+  const nodeID = nodeData.getID();
+  let element = null;
+
+  // Iterates through all node cell elements to find the one matching the edge's source/target data ID
+  d3.selectAll("g.node-cell").each(function (d) {
+    if (d && d.getID() === nodeID) {
+      element = this;
+    }
+  });
+  return element;
+}
+
 export function mouseEntersNodeCell(event, data) {
   const isStrictLock = lockedNode || lockedAdj || lockedEdge;
   let skipGlobalUpdates = false;
+
+  if (lockedClusterHover) {
+    // If the hovered node (data) is the locked cluster itself, or an ancestor of it (P),
+    // disable the listener (return immediately).
+    // isDescendant(lockedClusterHover, data) checks if 'data' is an ancestor of 'lockedClusterHover'.
+    if (data === lockedClusterHover || isDescendant(lockedClusterHover, data)) {
+      return;
+    }
+  }
 
   // Case A: A Cluster is Locked (Clicked)
   if (lockedClusterHover) {
@@ -304,21 +558,29 @@ export function mouseEntersNodeCell(event, data) {
       .attr("opacity", 1)
       .attr("fill", inclusionColor);
 
-    // Step 6: Dim background cells in relevant matrices for contrast.
+    // Step 6: Dim everything in relevant matrices that isn't part of the hovered node's internal structure
+    // We strictly want to highlight only connections between descendants (internal content),
+    // effectively hiding the "crosshair" rows/cols of the node itself and its ancestors.
+    const descendantsOnly = new Set(data.getDescendants());
+
     allAdjCells
-      .filter(
-        (d) =>
-          // 1. Must be in a relevant matrix (a cluster that is the hovered node, an ancestor, or a descendant)
-          allRelevantNodes.has(d.source.getParent()) &&
-          // 2. Must NOT be on the row/column corresponding to a relevant node (hovered, ancestor, or descendant)
-          !(allRelevantNodes.has(d.source) || allRelevantNodes.has(d.target))
-      )
+      .filter((d) => {
+        // Only affect cells in relevant matrices (already filtered by Step 1, but we check to be safe/specific)
+        if (!allRelevantNodes.has(d.source.getParent())) return false;
+
+        // Check if this cell connects two nodes within the hovered cluster's subtree (descendants)
+        const isInternalContent =
+          descendantsOnly.has(d.source) && descendantsOnly.has(d.target);
+
+        // Dim if it is NOT internal content
+        return !isInternalContent;
+      })
       .attr("opacity", 0.2);
 
-    // Step 7: HIGHLIGHT ROWS/COLUMNS OF MATRICES
+    // Step 7: Ensure internal content remains highlighted
     allAdjCells
       .filter(
-        (d) => allRelevantNodes.has(d.source) || allRelevantNodes.has(d.target)
+        (d) => descendantsOnly.has(d.source) && descendantsOnly.has(d.target)
       )
       .attr("opacity", 1);
 
@@ -777,17 +1039,25 @@ export function mouseEntersAdjCell(event, data) {
         d3.select(this).select("use").attr("fill", d.color);
       });
 
-    // b) Highlight ONLY the row and column cells within the hovered matrix (Local Matrix)
+    // b) Highlight ONLY the cells between the hovered cell and the headers (L-shape)
+    const hX1 = data.x1; // Hovered source position
+    const hX2 = data.x2; // Hovered target position
+
     allAdjCells
-      .filter(
-        (d) =>
-          d.source.getParent() === parentCluster &&
-          d.target.getParent() === parentCluster &&
-          (d.source.getID() === dataSourceID ||
-            d.target.getID() === dataTargetID ||
-            d.source.getID() === dataTargetID ||
-            d.target.getID() === dataSourceID)
-      )
+      .filter((d) => {
+        // Must be in the same matrix
+        if (d.source.getParent() !== parentCluster) return false;
+
+        // 1. Row Segment: Same Source, Target comes before (or is) the hovered target
+        // This draws the line from the Source Node (Diagonal) -> Hovered Cell
+        const isRowSegment = d.source.getID() === dataSourceID && d.x2 <= hX2;
+
+        // 2. Column Segment: Same Target, Source comes after (or is) the hovered source
+        // This draws the line from the Hovered Cell -> Target Node (Diagonal)
+        const isColSegment = d.target.getID() === dataTargetID && d.x1 >= hX1;
+
+        return isRowSegment || isColSegment;
+      })
       .attr("opacity", 1)
       .each(function (d) {
         d3.select(this).select("use").attr("fill", d.color);
@@ -1310,18 +1580,18 @@ export function mouseEntersEdge(
       .attr("opacity", 1)
       .attr("fill", inclusionColor);
 
-    // Highlight Adj Cells for context
-    allAdjCells
-      .filter(
-        (d) =>
-          ancestorNodes.has(d.source) ||
-          d.source == data.source ||
-          d.source == data.target ||
-          ancestorNodes.has(d.target) ||
-          d.target == data.target ||
-          d.target == data.source
-      )
-      .attr("opacity", 1);
+    // // Highlight Adj Cells for context
+    // allAdjCells
+    //   .filter(
+    //     (d) =>
+    //       ancestorNodes.has(d.source) ||
+    //       d.source == data.source ||
+    //       d.source == data.target ||
+    //       ancestorNodes.has(d.target) ||
+    //       d.target == data.target ||
+    //       d.target == data.source
+    //   )
+    //   .attr("opacity", 1);
 
     // Highlight Ancestor Cluster Nodes
     allNodes
@@ -1330,6 +1600,7 @@ export function mouseEntersEdge(
       .each(function (d) {
         // (Reuse cluster color logic)
         if (
+          d.getNodeType() === "Cluster" &&
           window.HCGDrawer &&
           typeof window.HCGDrawer.getClusterNodeCalculatedColor === "function"
         ) {

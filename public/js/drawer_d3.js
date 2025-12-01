@@ -1210,7 +1210,9 @@ export class HierarchicallyClusteredGraphDrawer {
         .on("mouseover", listeners.mouseEntersAdjCell)
         .on("mousemove", listeners.mouseEntersAdjCell)
         .on("mouseleave", listeners.mouseLeavesAdjCell)
-        .on("click", listeners.adjCellClicked);
+        .on("click", (event, d) => {
+          listeners.adjCellClicked(event, d, cellSize);
+        });
     });
 
     const nodeCells = clusterContainer
@@ -1224,7 +1226,9 @@ export class HierarchicallyClusteredGraphDrawer {
       .attr("transform", (d, i) => `translate(${startX + i * cellSize}, 0)`)
       .on("mouseenter", listeners.mouseEntersNodeCell)
       .on("mouseleave", listeners.mouseLeavesNodeCell)
-      .on("click", listeners.nodeClicked);
+      .on("click", (event, d) => {
+        listeners.nodeClicked(event, d, cellSize);
+      });
 
     nodeCells
       .append("use")
@@ -2053,7 +2057,9 @@ export class HierarchicallyClusteredGraphDrawer {
     nodeCells
       .on("mouseover", listeners.mouseEntersNodeCell)
       .on("mouseleave", listeners.mouseLeavesNodeCell)
-      .on("click", listeners.nodeClicked);
+      .on("click", (event, d) => {
+        listeners.nodeClicked(event, d, cellSize);
+      });
 
     nodeCells
       .append("text")
