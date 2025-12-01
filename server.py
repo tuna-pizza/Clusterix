@@ -207,7 +207,7 @@ def dict_to_nx_graph(data):
 
 
 # --- Generate order (ILP or heuristic) ---
-def generate_order(instance, method="ilp"):
+def generate_order(instance, method="input"):
     """
     Generate node order for a graph instance.
     method: "ilp", "heuristic", or "hybrid"
@@ -220,7 +220,7 @@ def generate_order(instance, method="ilp"):
 
     try:
         if method == "heuristic":
-            print("🎯 EXECUTING HEURISTIC SOLVER")
+            print("EXECUTING HEURISTIC SOLVER")
             try:
                 print(f"🔧 Running heuristic solver for {instance}")
                 G = dict_to_nx_graph(json.load(open(graph_file, "r", encoding="utf-8")))
@@ -333,11 +333,11 @@ def get_order(instance):
     if not re.fullmatch(r"[A-Za-z0-9_-]+", instance):
         return jsonify({"error": "Invalid instance name"}), 400
 
-    # Retrieve the method from query parameters, defaulting to 'ilp' (if method is absent)
+    # Retrieve the method from query parameters, defaulting to 'input' (if method is absent)
     method = request.args.get("method") or request.args.get("solver") or "input"
     method = method.lower()
     
-    print(f"🔍 DEBUG: Requested method = '{method}'")
+    print(f"DEBUG: Requested method = '{method}'")
      
     # --- Handle 'input' method explicitly by reading the graph file ---
     if method == "input":
@@ -385,7 +385,7 @@ def get_order(instance):
     # --- Original Solver Logic (Only runs if method is not 'input') ---
     if method not in ["ilp", "heuristic", "hybrid"]:
         # If the method is not 'input' (handled above) AND not a valid solver
-        return jsonify({"error": "Invalid method. Use 'input', 'ilp', or 'heuristic'"}), 400
+        return jsonify({"error": "Invalid method. Use 'input', or 'ilp'"}), 400
     
     solver_func = get_solver_by_name(method)
     if solver_func is None:
