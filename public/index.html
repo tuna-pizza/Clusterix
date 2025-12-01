@@ -21,8 +21,6 @@
       id="main-header-container"
       style="background-color: var(--color-background-medium)"
     >
-	
-	
       <div style="display: flex; align-items: center; gap: 4px">
         <img
           src="clusterix_final.png"
@@ -68,7 +66,7 @@
             />
 
             <div id="samples-popover-container" style="position: relative">
-              <button   id="sample-button">
+              <button id="sample-button">
                 Instance <span style="font-size: 0.7em">&#x25BC;</span>
               </button>
 
@@ -143,7 +141,7 @@
             </div>
 
             <div id="solver-popover-container" style="position: relative">
-              <button  id="solver-button">
+              <button id="solver-button">
                 Solver <span style="font-size: 0.7em">&#x25BC;</span>
               </button>
 
@@ -192,7 +190,7 @@
                   "
                   >Heuristic Solver</a
                 >
-                <a
+                <!-- <a
                   data-solver="hybrid"
                   href="#"
                   style="
@@ -202,11 +200,16 @@
                     font-size: 0.9rem;
                   "
                   >Hybrid Solver</a
-                >
+                > -->
               </div>
             </div>
 
-            <button id="go-to-instance-button">Go</button>
+            <button
+              id="go-to-instance-button"
+              style="background: white; color: var(--color-secondary)"
+            >
+              Apply
+            </button>
           </div>
         </fieldset>
 
@@ -342,83 +345,86 @@
         <button id="downloadButton">Download JSON</button>
       </div>
     </header>
-	
-	<div
-          id="error-popup"
+
+    <div
+      id="error-popup"
+      style="
+        display: none;
+        position: fixed;
+        z-index: 1000;
+        left: 0;
+        top: 0;
+        width: 100%;
+        height: 100%;
+        overflow: auto;
+        background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+      "
+    >
+      <div
+        id="error-modal"
+        class="modal-content-container"
+        style="
+          margin: 15% auto;
+          padding: 25px; /* Increased padding */
+          border: 1px solid var(--color-secondary); /* Use theme color */
+          width: 80%;
+          max-width: 450px; /* Slightly wider */
+          border-radius: 8px;
+          box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Deeper shadow */
+          text-align: center;
+          background-color: var(
+            --color-background-medium
+          ); /* Ensure background is defined by theme */
+        "
+      >
+        <div
           style="
-            display: none;
-            position: fixed;
-            z-index: 1000;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0, 0, 0, 0.7); /* Slightly darker overlay */
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
           "
         >
-		<div
-			id="error-modal" 
-            class="modal-content-container"
+          <h2 style="margin: 0; font-size: 1.4rem">
+            <span>⚠️ Server Error!</span>
+          </h2>
+          <button
+            id="custom-error-close"
             style="
-              margin: 15% auto;
-              padding: 25px; /* Increased padding */
-              border: 1px solid var(--color-secondary); /* Use theme color */
-              width: 80%;
-              max-width: 450px; /* Slightly wider */
-              border-radius: 8px;
-              box-shadow: 0 4px 15px rgba(0, 0, 0, 0.6); /* Deeper shadow */
-              text-align: center;
+              padding: 8px 12px;
+              border: none;
+              border-radius: 5px;
+              cursor: pointer;
+              font-weight: bold;
               background-color: var(
-                --color-background-medium
-              ); /* Ensure background is defined by theme */
+                --color-secondary
+              ); /* Use secondary color for the action button */
+              color: var(--color-text-button);
+              font-family: var(--font-main);
+              transition: background-color 0.2s;
+              white-space: nowrap; /* Prevent text wrap */
             "
           >
-            <div
-              style="
-                display: flex;
-                justify-content: space-between;
-                align-items: center;
-                margin-bottom: 10px;
-              "
-            >
-              <h2 style="margin: 0; font-size: 1.4rem; text-color: &#x231B;">
-                <span>⚠️ Server Error!</span>
-              </h2>
-              <button
-                id="custom-error-close"
-                style="
-                  padding: 8px 12px;
-                  border: none;
-                  border-radius: 5px;
-                  cursor: pointer;
-                  font-weight: bold;
-                  background-color: var(
-                    --color-secondary
-                  ); /* Use secondary color for the action button */
-                  color: var(--color-text-button);
-                  font-family: var(--font-main);
-                  transition: background-color 0.2s;
-                  white-space: nowrap; /* Prevent text wrap */
-                "
-              >
-                Confirm
-              </button>
-			  </div>
-			  <hr
-              style="
-                border: 0;
-                height: 1px;
-                background: var(--color-secondary);
-                margin: 15px 0;
-              "
-            />
+            Confirm
+          </button>
+        </div>
+        <hr
+          style="
+            border: 0;
+            height: 1px;
+            background: var(--color-secondary);
+            margin: 15px 0;
+          "
+        />
 
-            <p style="margin-top: 15px; margin-bottom: 0; font-size: 0.95rem" id="error-message">
-              The solver is processing the request. This may take a moment.
-            </p>
-            </div>
-		</div>
+        <p
+          style="margin-top: 15px; margin-bottom: 0; font-size: 0.95rem"
+          id="error-message"
+        >
+          The solver is processing the request. This may take a moment.
+        </p>
+      </div>
+    </div>
 
     <div id="control-panel-container">
       <button id="control-panel-toggle-button">Show Drawing Styles</button>
@@ -664,28 +670,28 @@
     </div>
 
     <script>
-	function showErrorModal(message) {
-	  const popup = document.getElementById("error-popup");
-	  const modal = document.getElementById("error-modal");
-	  const msgSpan = document.getElementById("error-message");
-	  console.log(msgSpan);
-	  if (!modal || !msgSpan) return;
+      function showErrorModal(message) {
+        const popup = document.getElementById("error-popup");
+        const modal = document.getElementById("error-modal");
+        const msgSpan = document.getElementById("error-message");
+        console.log(msgSpan);
+        if (!modal || !msgSpan) return;
 
-	  msgSpan.textContent = message;
-	  modal.style.display = "block";
-	  popup.style.display = "block";
-	}
+        msgSpan.textContent = message;
+        modal.style.display = "block";
+        popup.style.display = "block";
+      }
 
-	function hideErrorModal() {
-	  const popup = document.getElementById("error-popup");
-	  const modal = document.getElementById("error-modal");
-	  if (!modal) return;
-	  modal.style.display = "none";
-	  popup.style.display = "none";
-	}
+      function hideErrorModal() {
+        const popup = document.getElementById("error-popup");
+        const modal = document.getElementById("error-modal");
+        if (!modal) return;
+        modal.style.display = "none";
+        popup.style.display = "none";
+      }
 
-	const closeBtn = document.getElementById("custom-error-close");
-	if (closeBtn) closeBtn.addEventListener("click", hideErrorModal);
+      const closeBtn = document.getElementById("custom-error-close");
+      if (closeBtn) closeBtn.addEventListener("click", hideErrorModal);
 
       // Function to handle all visualization downloads
       function saveVisualization(format) {
@@ -1193,7 +1199,9 @@
             const data = await res.json();
 
             if (!res.ok || !data.success) {
-              showErrorModal("Upload failed: " + (data.message || "Unknown error"));
+              showErrorModal(
+                "Upload failed: " + (data.message || "Unknown error")
+              );
             } else {
               const instanceId = data.filename.replace(".json", "");
 
@@ -1357,7 +1365,7 @@
               buttonText = "Input Order";
             } else {
               const formattedSolver =
-                (selectedSolver.toLowerCase() === "ilp")
+                selectedSolver.toLowerCase() === "ilp"
                   ? "ILP".toUpperCase()
                   : selectedSolver.slice(0).charAt(0).toUpperCase() +
                     selectedSolver.slice(1).toLowerCase();
@@ -1389,10 +1397,10 @@
                 buttonText = "Input Order";
               } else {
                 const formattedSolver =
-                (selectedSolver.toLowerCase() === "ilp")
-                  ? "ILP".toUpperCase()
-                  : selectedSolver.slice(0).charAt(0).toUpperCase() +
-                    selectedSolver.slice(1).toLowerCase();
+                  selectedSolver.toLowerCase() === "ilp"
+                    ? "ILP".toUpperCase()
+                    : selectedSolver.slice(0).charAt(0).toUpperCase() +
+                      selectedSolver.slice(1).toLowerCase();
                 buttonText = `${formattedSolver} Solver`;
               }
 
@@ -1541,7 +1549,7 @@
             <option value="input" selected>Input Order</option>
             <option value="ilp">ILP Solver</option>
             <option value="heuristic">Heuristic Solver</option>
-            <option value="hybrid">Hybrid Solver</option>
+            <!-- <option value="hybrid">Hybrid Solver</option> -->
           </select>
         </div>
 
