@@ -14,7 +14,7 @@ const instance =
 // Get solver type from URL
 const solverParam = urlParams.get("method");
 // Default solver is 'heuristic'
-let solver = "heuristic";
+let solver = "input";
 
 if (solverParam) {
   const paramLower = solverParam.toLowerCase();
@@ -42,39 +42,18 @@ document.addEventListener("DOMContentLoaded", () => {
 async function getOrder(instance, solver = "heuristic") {
   try {
     const response = await fetch(`/api/order/${instance}?method=${solver}`);
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
+	const data = await response.json();
+    if (!response.ok || data.error) {
+	  return { order: null, error: data.error || `HTTP error: ${response.status}` };
+      //throw new Error(`HTTP error! status: ${response.status}`);
     }
-    const data = await response.json();
-    return data.order;
-  } catch (err) {
-    console.error("Failed to fetch order:", err);
-    return null;
+    return { order: data.order, error: null };
+  } catch (err) 
+  {
+    return { order: null, error: `Network error: ${err.message}` };
   }
 }
 
-// --- Upload handler ---
-async function uploadGraph(file) {
-  const formData = new FormData();
-  formData.append("file", file);
-
-  try {
-    const response = await fetch("/api/upload", {
-      method: "POST",
-      body: formData,
-    });
-
-    if (!response.ok) {
-      throw new Error(`HTTP error! status: ${response.status}`);
-    }
-
-    const result = await response.json();
-    showSuccessModal(result.filename.replace(".json", ""));
-  } catch (error) {
-    console.error("Upload failed:", error);
-    alert("Failed to upload graph. Check console for details.");
-  }
-}
 
 // --- Modal Functions ---
 function showSuccessModal(instanceId) {
@@ -114,6 +93,65 @@ function applyNodeOrder(graph, order) {
   graph.nodes = newOrder;
 }
 
+function showErrorModal(message) {
+  const popup = document.getElementById("error-popup");
+  const modal = document.getElementById("error-modal");
+  const msgSpan = document.getElementById("error-message");
+  console.log(msgSpan);
+  if (!modal || !msgSpan) return;
+
+  msgSpan.textContent = message;
+  modal.style.display = "block";
+  popup.style.display = "block";
+}
+
+function hideErrorModal() {
+  const popup = document.getElementById("error-popup");
+  const modal = document.getElementById("error-modal");
+  if (!modal) return;
+  modal.style.display = "none";
+  popup.style.display = "none";
+}
+
+const closeBtn = document.getElementById("custom-error-close");
+if (closeBtn) closeBtn.addEventListener("click", hideErrorModal);
+
+
+// Close button listener
+const popupCloseBtn = document.getElementById("error-popup-close");
+if (popupCloseBtn) popupCloseBtn.addEventListener("click", hidePopup);
+
+
+function showWarning(message) 
+{
+  showErrorModal(message); // also show as popup
+}
+
+
+// --- Upload handler ---
+async function uploadGraph(file) {
+  const formData = new FormData();
+  formData.append("file", file);
+  console.log("Here");
+  try {
+    const response = await fetch("/api/upload", {
+      method: "POST",
+      body: formData,
+    });
+	
+    if (!response.ok) {
+      showWarning(`HTTP error! status: ${response.status}`);
+    }
+	{
+		const result = await response.json();
+		showSuccessModal(result.filename.replace(".json", ""));
+	}
+  } catch (error) {
+    console.error("Upload failed:", error);
+    showWarning("Failed to upload graph. Check console for details.");
+  }
+}
+
 // --- Main function ---
 async function main() {
   // Check if a solver request is being made on initial load.
@@ -132,16 +170,20 @@ async function main() {
 
   // 2. Get Order from Server
   if (solver !== "input") {
-    const orderString = await getOrder(instance, solver);
-    if (orderString) {
-      const orderList = Array.isArray(orderString)
-        ? orderString
-        : orderString.trim().split(/\s+/);
+    const { order, error } = await getOrder(instance, solver);
+    if (order) {
+      const orderList = Array.isArray(order)
+        ? order
+        : order.trim().split(/\s+/);
       // console.log(`Applying ${solver} order:`, orderList);
       applyNodeOrder(H, orderList); // <-- fixed
-    } else {
-      console.warn(`No ${solver} order received from server.`);
+    } else if (error) {
+		 showWarning(error);
     }
+	else
+	{
+		console.warn(`No ${solver} order received from server.`);
+	}
   } else {
     // console.log("Using Input Order (default order from file).");
   }
