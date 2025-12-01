@@ -126,6 +126,8 @@ except ImportError as e:
 
 MAX_UPLOAD_SIZE_MB = 1       # maximum size of uploaded JSONs in megabytes
 MAX_USER_FILES = 1024        # how many uploaded user files to keep
+LEAF_LIMIT_FOR_ILP = 30      # how many leaves are allowed for computing with an ILP
+TIME_LIMIT_FOR_ILP = 15*60   # amount of time allowed for computing with ILP
 
 # --- Flask app ---
 app = Flask(__name__, static_folder="public")
@@ -136,7 +138,7 @@ app.config["MAX_CONTENT_LENGTH"] = MAX_UPLOAD_SIZE_MB * 1024 * 1024
 def handle_large_file(e):
     return jsonify({
         "success": False,
-        "message": "The uploaded file is too large. Maximum allowed size is "+ MAX_UPLOAD_SIZE_MB +" MB."
+        "message": f"The uploaded file is too large. Maximum allowed size is {MAX_UPLOAD_SIZE_MB} MB."
     }), 413
 
 GRAPH_DIR = os.path.abspath(os.path.join("data", "graphs"))
@@ -258,7 +260,7 @@ def generate_order(instance, method="ilp"):
         else:  # default ILP
             print("EXECUTING ILP SOLVER")
             print(f"Running ILP solver for {instance}")
-            leaf_order = solve_layout_for_graph(graph_file)
+            leaf_order = solve_layout_for_graph(graph_file, TIME_LIMIT_FOR_ILP)
             if not leaf_order:
                 print("ILP solver returned empty order")
                 return ""
@@ -311,6 +313,20 @@ def get_solver_by_name(method):
     if solver is None:
         return None
     return solver
+
+def get_vertex_count(instance):
+    graph_file = os.path.join(GRAPH_DIR, f"{instance}.json")
+    with open(graph_file, "r", encoding="utf-8") as f:
+        data = json.load(f)
+
+    # Leaf nodes with type='leaf'
+    node_order = [n for n in data["nodes"] if n.get("type") == "leaf"]
+
+    if not node_order and data.get("nodes"):
+        # fallback: count all nodes
+        return len(data["nodes"])
+
+    return len(node_order)
 
 @app.route("/api/order/<instance>")
 def get_order(instance):
@@ -369,12 +385,24 @@ def get_order(instance):
     # --- Original Solver Logic (Only runs if method is not 'input') ---
     if method not in ["ilp", "heuristic", "hybrid"]:
         # If the method is not 'input' (handled above) AND not a valid solver
-        return jsonify({"error": "Invalid method. Use 'input', 'ilp', 'heuristic', or 'hybrid'"}), 400
+        return jsonify({"error": "Invalid method. Use 'input', 'ilp', or 'heuristic'"}), 400
     
     solver_func = get_solver_by_name(method)
     if solver_func is None:
         print("here")
         return jsonify({"error": f"{method.capitalize()} solver is not available"}), 500
+        
+    if method == "ilp":
+        try:
+            vertex_count = get_vertex_count(instance)
+        except Exception as e:
+            return jsonify({"error": "Failed to inspect graph", "details": str(e)}), 500
+
+        if vertex_count > LEAF_LIMIT_FOR_ILP:
+            return jsonify({
+                "error": f"ILP solver node count limit exceeded! The input network has {vertex_count} nodes, but on this server the maximum allowed is {LEAF_LIMIT_FOR_ILP}."
+            }), 400
+        
     order_string = generate_order(instance, method)
     try:
         if order_string:
