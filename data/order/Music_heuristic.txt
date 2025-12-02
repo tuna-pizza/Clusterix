@@ -1,0 +1,1 @@
+Music Genre Rock Metal 7 6 8 5 ClassicRock 1 2 3 Alternative 9 11 12 10 HipHop ConsciousRap 65 66 67 GoldenAge 53 52 54 55 56 51 Trap 60 62 58 57 59 61 64 63 Pop ModernPop 15 24 21 4 22 25 28 DancePop 13 20 16 18 23 26 19 27 29 17 14 KPop 43 42 41 LatinPop 45 47 48 49 46 50 68 44 RnB 37 38 39 36 32 40 34 35 31 33 30

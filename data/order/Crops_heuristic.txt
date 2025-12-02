@@ -1,0 +1,1 @@
+Primary_Crops Grassland 33 32 34 Field_Crops Crop_Mix 47 Small_Grain_Cereal 8 3 9 1 4 5 6 7 10 2 11 Vegetable_Crop 14 16 15 Large_Grain_Cereal 13 12 Broad_Leaf_Row_Crop 26 18 19 22 27 20 21 24 17 23 25 28 30 29 31 Special_Crops Fallow 41 Hedge_Gardens_Multiple_2 45 44 43 Berries 42 Orchards Tree_Crop 39 35 38 37 36 40 Orchard_Crop 48 Forest 46
