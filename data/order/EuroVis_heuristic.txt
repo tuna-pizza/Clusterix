@@ -1,1 +1,0 @@
-EuroVis Asia China 36 42 48 50 62 9 Saudi-Arabia 3 Singapore 63 Australia 26 58 Europe Austria 1 11 Czech Republic 34 France 31 8 Germany 13 16 19 22 28 29 39 43 44 45 47 53 60 64 Italy 5 Norway 21 Sweden 51 Switzerland 30 65 The Netherlands 14 32 59 6 UK 2 40 North America Canada 56 USA 0 10 12 15 17 18 20 23 24 25 27 33 35 37 38 4 41 46 49 52 54 55 57 61 66 67 7
