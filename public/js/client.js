@@ -173,8 +173,9 @@ async function main() {
     const { order, error } = await getOrder(instance, solver);
     if (order) {
       const orderList = Array.isArray(order)
-        ? order
-        : order.trim().split(/\s+/);
+	  ? order
+	  : (order.trim().match(/"([^"]+)"|(\S+)/g) || [])
+		  .map(token => token.replace(/^"|"$/g, ""));
       // console.log(`Applying ${solver} order:`, orderList);
       applyNodeOrder(H, orderList); // <-- fixed
     } else if (error) {

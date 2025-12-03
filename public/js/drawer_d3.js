@@ -455,12 +455,24 @@ export class HierarchicallyClusteredGraphDrawer {
   }
 
   addOrderConstraints(orderString) {
+  this.nodeOrder = [];
+
+  // Match either "quoted strings" or unquoted words
+  const idOrder = orderString.match(/"([^"]+)"|(\S+)/g)
+    .map(token => token.replace(/^"|"$/g, "")); // remove surrounding quotes
+
+  for (let id of idOrder) {
+    this.nodeOrder.push(this.H.getNodeByID(id));
+  }
+}
+
+  /*addOrderConstraints(orderString) {
     this.nodeOrder = [];
     let idOrder = orderString.split(" ");
     for (let i = 0; i < idOrder.length; i++) {
       this.nodeOrder.push(this.H.getNodeByID(idOrder[i]));
     }
-  }
+  }*/
 
   defineNodeShapes(defs) {
     defs
@@ -1600,6 +1612,7 @@ export class HierarchicallyClusteredGraphDrawer {
     if (this.nodeOrder === null) {
       this.nodeOrder = this.H.getVertices();
     }
+	
 
     this.computeEdgeColors();
 
