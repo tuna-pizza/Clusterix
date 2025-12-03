@@ -225,12 +225,19 @@ def generate_order(instance, method="input"):
                 print(f"🔧 Running heuristic solver for {instance}")
                 G = dict_to_nx_graph(json.load(open(graph_file, "r", encoding="utf-8")))
                 layout = solve_layout_for_graph_heuristic(G)
-
+                
                 if not layout:
                     print("Heuristic solver returned empty layout")
                     return []
 
-                return " ".join(layout)
+                cleaned_order = []
+                for item in layout:
+                    if " " in item:
+                        cleaned_order.append(f'"{item}"')
+                    else:
+                        cleaned_order.append(item)
+
+                return " ".join(cleaned_order)
             except Exception as e:
                 print(f"Error in heuristic solver: {e}")
                 import traceback
@@ -244,7 +251,15 @@ def generate_order(instance, method="input"):
                 hybrid_order = solve_layout_for_graph_hybrid(graph_file)
                 
                 if hybrid_order:
-                    order_string = " ".join(hybrid_order)
+                    cleaned_order = []
+                    for item in hybrid_order:
+                        if " " in item:
+                            cleaned_order.append(f'"{item}"')
+                        else:
+                            cleaned_order.append(item)
+
+                    order_string = " ".join(cleaned_order)
+                    #order_string = " ".join(hybrid_order)
                     print(f"TRUE HYBRID order generated: {len(hybrid_order)} nodes")
                     return order_string
                 else:
@@ -265,7 +280,14 @@ def generate_order(instance, method="input"):
                 print("ILP solver returned empty order")
                 return ""
 
-            order_string = " ".join(leaf_order)
+            cleaned_order = []
+            for item in leaf_order:
+                if " " in item:
+                    cleaned_order.append(f'"{item}"')
+                else:
+                    cleaned_order.append(item)
+                        
+            order_string = " ".join(cleaned_order)
             print(f"ILP order generated: {len(leaf_order)} nodes")
             return order_string
 

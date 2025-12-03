@@ -573,6 +573,8 @@ def solve_layout_for_graph_heuristic(graph_input, output_csv="heuristic_results.
         # Save results to CSV
         _save_results(results, output_csv)
         
+        final_layout = [node for node in final_layout if node in leaf_nodes]
+        
         return final_layout
         
     except Exception as e:
