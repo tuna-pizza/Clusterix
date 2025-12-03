@@ -114,3 +114,7 @@ Here is a sample structure of a simple graph:
   ]
 }
 ```
+
+# Additional Resources
+
+The folder "benchmark" contains the synthetic networks used in our experiments. Real-world instances can be found in data/graphs and can be displayed on the web client.
