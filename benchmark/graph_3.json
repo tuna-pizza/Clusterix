@@ -1,0 +1,285 @@
+{
+  "nodes": [
+    {
+      "id": "A",
+      "parent": null,
+      "type": "cluster"
+    },
+    {
+      "id": "B",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "0",
+      "parent": "B",
+      "type": "leaf"
+    },
+    {
+      "id": "5",
+      "parent": "B",
+      "type": "leaf"
+    },
+    {
+      "id": "13",
+      "parent": "B",
+      "type": "leaf"
+    },
+    {
+      "id": "14",
+      "parent": "B",
+      "type": "leaf"
+    },
+    {
+      "id": "17",
+      "parent": "B",
+      "type": "leaf"
+    },
+    {
+      "id": "C",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "D",
+      "parent": "C",
+      "type": "cluster"
+    },
+    {
+      "id": "8",
+      "parent": "D",
+      "type": "leaf"
+    },
+    {
+      "id": "19",
+      "parent": "D",
+      "type": "leaf"
+    },
+    {
+      "id": "1",
+      "parent": "D",
+      "type": "leaf"
+    },
+    {
+      "id": "16",
+      "parent": "D",
+      "type": "leaf"
+    },
+    {
+      "id": "E",
+      "parent": "C",
+      "type": "cluster"
+    },
+    {
+      "id": "9",
+      "parent": "E",
+      "type": "leaf"
+    },
+    {
+      "id": "7",
+      "parent": "E",
+      "type": "leaf"
+    },
+    {
+      "id": "2",
+      "parent": "E",
+      "type": "leaf"
+    },
+    {
+      "id": "F",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "3",
+      "parent": "F",
+      "type": "leaf"
+    },
+    {
+      "id": "11",
+      "parent": "F",
+      "type": "leaf"
+    },
+    {
+      "id": "15",
+      "parent": "F",
+      "type": "leaf"
+    },
+    {
+      "id": "G",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "4",
+      "parent": "G",
+      "type": "leaf"
+    },
+    {
+      "id": "6",
+      "parent": "G",
+      "type": "leaf"
+    },
+    {
+      "id": "10",
+      "parent": "G",
+      "type": "leaf"
+    },
+    {
+      "id": "12",
+      "parent": "G",
+      "type": "leaf"
+    },
+    {
+      "id": "18",
+      "parent": "G",
+      "type": "leaf"
+    }
+  ],
+  "edges": [
+    {
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "source": "0",
+      "target": "3"
+    },
+    {
+      "source": "0",
+      "target": "4"
+    },
+    {
+      "source": "0",
+      "target": "5"
+    },
+    {
+      "source": "0",
+      "target": "7"
+    },
+    {
+      "source": "0",
+      "target": "13"
+    },
+    {
+      "source": "0",
+      "target": "14"
+    },
+    {
+      "source": "0",
+      "target": "16"
+    },
+    {
+      "source": "0",
+      "target": "17"
+    },
+    {
+      "source": "1",
+      "target": "3"
+    },
+    {
+      "source": "1",
+      "target": "4"
+    },
+    {
+      "source": "1",
+      "target": "6"
+    },
+    {
+      "source": "1",
+      "target": "7"
+    },
+    {
+      "source": "1",
+      "target": "8"
+    },
+    {
+      "source": "1",
+      "target": "13"
+    },
+    {
+      "source": "2",
+      "target": "8"
+    },
+    {
+      "source": "2",
+      "target": "9"
+    },
+    {
+      "source": "2",
+      "target": "16"
+    },
+    {
+      "source": "2",
+      "target": "19"
+    },
+    {
+      "source": "3",
+      "target": "11"
+    },
+    {
+      "source": "4",
+      "target": "5"
+    },
+    {
+      "source": "4",
+      "target": "6"
+    },
+    {
+      "source": "4",
+      "target": "10"
+    },
+    {
+      "source": "4",
+      "target": "11"
+    },
+    {
+      "source": "4",
+      "target": "12"
+    },
+    {
+      "source": "4",
+      "target": "14"
+    },
+    {
+      "source": "4",
+      "target": "18"
+    },
+    {
+      "source": "4",
+      "target": "19"
+    },
+    {
+      "source": "6",
+      "target": "10"
+    },
+    {
+      "source": "6",
+      "target": "15"
+    },
+    {
+      "source": "7",
+      "target": "9"
+    },
+    {
+      "source": "10",
+      "target": "12"
+    },
+    {
+      "source": "11",
+      "target": "15"
+    },
+    {
+      "source": "12",
+      "target": "18"
+    },
+    {
+      "source": "13",
+      "target": "17"
+    }
+  ]
+}

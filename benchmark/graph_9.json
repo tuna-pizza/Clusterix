@@ -1,0 +1,395 @@
+{
+  "nodes": [
+    {
+      "id": "A",
+      "parent": null,
+      "type": "cluster"
+    },
+    {
+      "id": "B",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "C",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "14",
+      "parent": "C",
+      "type": "leaf"
+    },
+    {
+      "id": "7",
+      "parent": "C",
+      "type": "leaf"
+    },
+    {
+      "id": "D",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "12",
+      "parent": "D",
+      "type": "leaf"
+    },
+    {
+      "id": "E",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "0",
+      "parent": "E",
+      "type": "leaf"
+    },
+    {
+      "id": "F",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "1",
+      "parent": "F",
+      "type": "leaf"
+    },
+    {
+      "id": "G",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "17",
+      "parent": "G",
+      "type": "leaf"
+    },
+    {
+      "id": "H",
+      "parent": "B",
+      "type": "cluster"
+    },
+    {
+      "id": "13",
+      "parent": "H",
+      "type": "leaf"
+    },
+    {
+      "id": "I",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "2",
+      "parent": "I",
+      "type": "leaf"
+    },
+    {
+      "id": "6",
+      "parent": "I",
+      "type": "leaf"
+    },
+    {
+      "id": "10",
+      "parent": "I",
+      "type": "leaf"
+    },
+    {
+      "id": "19",
+      "parent": "I",
+      "type": "leaf"
+    },
+    {
+      "id": "J",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "K",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "5",
+      "parent": "K",
+      "type": "leaf"
+    },
+    {
+      "id": "11",
+      "parent": "K",
+      "type": "leaf"
+    },
+    {
+      "id": "L",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "15",
+      "parent": "L",
+      "type": "leaf"
+    },
+    {
+      "id": "M",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "18",
+      "parent": "M",
+      "type": "leaf"
+    },
+    {
+      "id": "N",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "4",
+      "parent": "N",
+      "type": "leaf"
+    },
+    {
+      "id": "O",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "9",
+      "parent": "O",
+      "type": "leaf"
+    },
+    {
+      "id": "P",
+      "parent": "J",
+      "type": "cluster"
+    },
+    {
+      "id": "3",
+      "parent": "P",
+      "type": "leaf"
+    },
+    {
+      "id": "Q",
+      "parent": "A",
+      "type": "cluster"
+    },
+    {
+      "id": "8",
+      "parent": "Q",
+      "type": "leaf"
+    },
+    {
+      "id": "16",
+      "parent": "Q",
+      "type": "leaf"
+    }
+  ],
+  "edges": [
+    {
+      "source": "0",
+      "target": "1"
+    },
+    {
+      "source": "0",
+      "target": "2"
+    },
+    {
+      "source": "0",
+      "target": "3"
+    },
+    {
+      "source": "0",
+      "target": "4"
+    },
+    {
+      "source": "0",
+      "target": "6"
+    },
+    {
+      "source": "0",
+      "target": "7"
+    },
+    {
+      "source": "0",
+      "target": "8"
+    },
+    {
+      "source": "0",
+      "target": "9"
+    },
+    {
+      "source": "0",
+      "target": "10"
+    },
+    {
+      "source": "0",
+      "target": "12"
+    },
+    {
+      "source": "0",
+      "target": "13"
+    },
+    {
+      "source": "0",
+      "target": "14"
+    },
+    {
+      "source": "0",
+      "target": "17"
+    },
+    {
+      "source": "1",
+      "target": "5"
+    },
+    {
+      "source": "1",
+      "target": "7"
+    },
+    {
+      "source": "1",
+      "target": "12"
+    },
+    {
+      "source": "1",
+      "target": "13"
+    },
+    {
+      "source": "2",
+      "target": "4"
+    },
+    {
+      "source": "2",
+      "target": "6"
+    },
+    {
+      "source": "2",
+      "target": "10"
+    },
+    {
+      "source": "2",
+      "target": "16"
+    },
+    {
+      "source": "2",
+      "target": "19"
+    },
+    {
+      "source": "3",
+      "target": "4"
+    },
+    {
+      "source": "3",
+      "target": "5"
+    },
+    {
+      "source": "3",
+      "target": "6"
+    },
+    {
+      "source": "3",
+      "target": "9"
+    },
+    {
+      "source": "3",
+      "target": "11"
+    },
+    {
+      "source": "3",
+      "target": "14"
+    },
+    {
+      "source": "3",
+      "target": "16"
+    },
+    {
+      "source": "3",
+      "target": "18"
+    },
+    {
+      "source": "4",
+      "target": "5"
+    },
+    {
+      "source": "4",
+      "target": "11"
+    },
+    {
+      "source": "4",
+      "target": "17"
+    },
+    {
+      "source": "5",
+      "target": "7"
+    },
+    {
+      "source": "5",
+      "target": "8"
+    },
+    {
+      "source": "5",
+      "target": "9"
+    },
+    {
+      "source": "5",
+      "target": "11"
+    },
+    {
+      "source": "5",
+      "target": "12"
+    },
+    {
+      "source": "5",
+      "target": "15"
+    },
+    {
+      "source": "5",
+      "target": "18"
+    },
+    {
+      "source": "6",
+      "target": "10"
+    },
+    {
+      "source": "7",
+      "target": "8"
+    },
+    {
+      "source": "7",
+      "target": "17"
+    },
+    {
+      "source": "8",
+      "target": "15"
+    },
+    {
+      "source": "8",
+      "target": "16"
+    },
+    {
+      "source": "9",
+      "target": "19"
+    },
+    {
+      "source": "10",
+      "target": "19"
+    },
+    {
+      "source": "11",
+      "target": "13"
+    },
+    {
+      "source": "11",
+      "target": "15"
+    },
+    {
+      "source": "12",
+      "target": "14"
+    },
+    {
+      "source": "15",
+      "target": "18"
+    }
+  ]
+}
