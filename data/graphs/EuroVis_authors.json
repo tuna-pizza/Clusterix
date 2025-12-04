@@ -466,7 +466,6 @@
     {"source": "52", "target": "138", "weight": 1, "label": "HyperFLINT: Hypernetwork-based Flow Estimation and Temporal Interpolation for Scientific Ensemble Visualization"},
     {"source": "106", "target": "129", "weight": 1, "label": "Euclidean, Hyperbolic, and Spherical Networks: An Empirical Study of Matching Network Structure to Best Visualizations"},
     {"source": "7", "target": "47", "weight": 1, "label": "When Dimensionality Reduction Meets Graph (Drawing) Theory: Introducing a Common Framework, Challenges and Opportunities"},
-    {"source": "58", "target": "115", "weight": 2, "label": "VISLIX: An XAI Framework for Validating Vision Models with Slice Discovery and Analysis"},
     {"source": "92", "target": "195", "weight": 1, "label": "An Interactive Visual Enhancement for Prompted Programmatic Weak Supervision in Text Classification"},
     {"source": "43", "target": "142", "weight": 1, "label": "Visually Assessing 1-D Orderings of Contiguous Spatial Polygons"},
     {"source": "54", "target": "142", "weight": 1, "label": "Visually Assessing 1-D Orderings of Contiguous Spatial Polygons"},
