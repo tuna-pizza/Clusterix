@@ -1,0 +1,975 @@
+{
+  "nodes": [
+    { "id": "Music Genre", "parent": null, "type": "cluster" },
+    { "id": "Rock", "parent": "Music Genre", "type": "cluster" },
+    { "id": "Pop", "parent": "Music Genre", "type": "cluster" },
+    { "id": "HipHop", "parent": "Music Genre", "type": "cluster" },
+    { "id": "ClassicRock", "parent": "Rock", "type": "cluster" },
+    { "id": "Metal", "parent": "Rock", "type": "cluster" },
+    { "id": "Alternative", "parent": "Rock", "type": "cluster" },
+    { "id": "DancePop", "parent": "Pop", "type": "cluster" },
+    { "id": "ModernPop", "parent": "Pop", "type": "cluster" },
+    { "id": "RnB", "parent": "Pop", "type": "cluster" },
+    { "id": "KPop", "parent": "Pop", "type": "cluster" },
+    { "id": "LatinPop", "parent": "Pop", "type": "cluster" },
+    { "id": "GoldenAge", "parent": "HipHop", "type": "cluster" },
+    { "id": "Trap", "parent": "HipHop", "type": "cluster" },
+    { "id": "ConsciousRap", "parent": "HipHop", "type": "cluster" },
+    { "id": "1", "parent": "ClassicRock", "type": "leaf", "label": "Queen" },
+    {
+      "id": "2",
+      "parent": "ClassicRock",
+      "type": "leaf",
+      "label": "The Rolling Stones"
+    },
+    {
+      "id": "3",
+      "parent": "ClassicRock",
+      "type": "leaf",
+      "label": "Aerosmith"
+    },
+    { "id": "4", "parent": "ModernPop", "type": "leaf", "label": "Elton John" },
+    { "id": "5", "parent": "Metal", "type": "leaf", "label": "Black Sabbath" },
+    { "id": "6", "parent": "Metal", "type": "leaf", "label": "Metallica" },
+    { "id": "7", "parent": "Metal", "type": "leaf", "label": "Bon Jovi" },
+    { "id": "8", "parent": "Metal", "type": "leaf", "label": "Guns N' Roses" },
+    { "id": "9", "parent": "Alternative", "type": "leaf", "label": "Coldplay" },
+    { "id": "10", "parent": "Alternative", "type": "leaf", "label": "U2" },
+    {
+      "id": "11",
+      "parent": "Alternative",
+      "type": "leaf",
+      "label": "Linkin Park"
+    },
+    {
+      "id": "12",
+      "parent": "Alternative",
+      "type": "leaf",
+      "label": "Imagine Dragons"
+    },
+    {
+      "id": "13",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Taylor Swift"
+    },
+    {
+      "id": "14",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Ariana Grande"
+    },
+    {
+      "id": "15",
+      "parent": "ModernPop",
+      "type": "leaf",
+      "label": "Ed Sheeran"
+    },
+    { "id": "16", "parent": "DancePop", "type": "leaf", "label": "Lady Gaga" },
+    { "id": "17", "parent": "DancePop", "type": "leaf", "label": "Dua Lipa" },
+    {
+      "id": "18",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Selena Gomez"
+    },
+    {
+      "id": "19",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Charlie Puth"
+    },
+    { "id": "20", "parent": "DancePop", "type": "leaf", "label": "Katy Perry" },
+    {
+      "id": "21",
+      "parent": "ModernPop",
+      "type": "leaf",
+      "label": "Justin Bieber"
+    },
+    {
+      "id": "22",
+      "parent": "ModernPop",
+      "type": "leaf",
+      "label": "Bruno Mars"
+    },
+    {
+      "id": "23",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Britney Spears"
+    },
+    { "id": "24", "parent": "ModernPop", "type": "leaf", "label": "Maroon 5" },
+    { "id": "25", "parent": "ModernPop", "type": "leaf", "label": "Adele" },
+    {
+      "id": "26",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Christina Aguilera"
+    },
+    {
+      "id": "27",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Backstreet Boys"
+    },
+    {
+      "id": "28",
+      "parent": "ModernPop",
+      "type": "leaf",
+      "label": "Miley Cyrus"
+    },
+    {
+      "id": "29",
+      "parent": "DancePop",
+      "type": "leaf",
+      "label": "Jennifer Lopez"
+    },
+    { "id": "30", "parent": "RnB", "type": "leaf", "label": "Beyoncé" },
+    { "id": "31", "parent": "RnB", "type": "leaf", "label": "The Weeknd" },
+    { "id": "32", "parent": "RnB", "type": "leaf", "label": "Michael Jackson" },
+    { "id": "33", "parent": "RnB", "type": "leaf", "label": "Rihanna" },
+    { "id": "34", "parent": "RnB", "type": "leaf", "label": "Doja Cat" },
+    { "id": "35", "parent": "RnB", "type": "leaf", "label": "Madonna" },
+    { "id": "36", "parent": "RnB", "type": "leaf", "label": "Mariah Carey" },
+    { "id": "37", "parent": "RnB", "type": "leaf", "label": "Janet Jackson" },
+    { "id": "38", "parent": "RnB", "type": "leaf", "label": "Stevie Wonder" },
+    { "id": "39", "parent": "RnB", "type": "leaf", "label": "Alicia Keys" },
+    { "id": "40", "parent": "RnB", "type": "leaf", "label": "Usher" },
+    { "id": "41", "parent": "KPop", "type": "leaf", "label": "BTS" },
+    { "id": "42", "parent": "KPop", "type": "leaf", "label": "Blackpink" },
+    { "id": "43", "parent": "KPop", "type": "leaf", "label": "Stray Kids" },
+    { "id": "44", "parent": "LatinPop", "type": "leaf", "label": "Maluma" },
+    { "id": "45", "parent": "LatinPop", "type": "leaf", "label": "Bad Bunny" },
+    { "id": "46", "parent": "LatinPop", "type": "leaf", "label": "Shakira" },
+    { "id": "47", "parent": "LatinPop", "type": "leaf", "label": "J Balvin" },
+    { "id": "48", "parent": "LatinPop", "type": "leaf", "label": "Pitbull" },
+    { "id": "49", "parent": "LatinPop", "type": "leaf", "label": "Anitta" },
+    { "id": "50", "parent": "LatinPop", "type": "leaf", "label": "Nicky Jam" },
+    {
+      "id": "51",
+      "parent": "GoldenAge",
+      "type": "leaf",
+      "label": "Tupac Shakur"
+    },
+    { "id": "52", "parent": "GoldenAge", "type": "leaf", "label": "Nas" },
+    { "id": "53", "parent": "GoldenAge", "type": "leaf", "label": "Jay-Z" },
+    { "id": "54", "parent": "GoldenAge", "type": "leaf", "label": "Dr. Dre" },
+    { "id": "55", "parent": "GoldenAge", "type": "leaf", "label": "Eminem" },
+    { "id": "56", "parent": "GoldenAge", "type": "leaf", "label": "50 Cent" },
+    { "id": "57", "parent": "Trap", "type": "leaf", "label": "Drake" },
+    { "id": "58", "parent": "Trap", "type": "leaf", "label": "Travis Scott" },
+    { "id": "59", "parent": "Trap", "type": "leaf", "label": "Post Malone" },
+    { "id": "60", "parent": "Trap", "type": "leaf", "label": "Lil Wayne" },
+    { "id": "61", "parent": "Trap", "type": "leaf", "label": "Nicki Minaj" },
+    { "id": "62", "parent": "Trap", "type": "leaf", "label": "DJ Khaled" },
+    { "id": "63", "parent": "Trap", "type": "leaf", "label": "Flo Rida" },
+    {
+      "id": "64",
+      "parent": "Trap",
+      "type": "leaf",
+      "label": "The Black Eyed Peas"
+    },
+    {
+      "id": "65",
+      "parent": "ConsciousRap",
+      "type": "leaf",
+      "label": "Kendrick Lamar"
+    },
+    {
+      "id": "66",
+      "parent": "ConsciousRap",
+      "type": "leaf",
+      "label": "Kanye West"
+    },
+    {
+      "id": "67",
+      "parent": "ConsciousRap",
+      "type": "leaf",
+      "label": "J. Cole"
+    },
+    { "id": "68", "parent": "LatinPop", "type": "leaf", "label": "Sean Paul" }
+  ],
+  "edges": [
+    {
+      "source": "57",
+      "target": "60",
+      "weight": 8,
+      "label": "Love Me \n Right Above It \n The Motto \n HYFR \n Believe Me \n Grindin' \n She Will \n I'm On One"
+    },
+    {
+      "source": "57",
+      "target": "61",
+      "weight": 5,
+      "label": "Make Me Proud \n Truffle Butter \n Only \n Up All Night \n Moment 4 Life"
+    },
+    {
+      "source": "57",
+      "target": "58",
+      "weight": 3,
+      "label": "Company \n Portland \n Sicko Mode"
+    },
+    {
+      "source": "53",
+      "target": "66",
+      "weight": 7,
+      "label": "Watch the Throne \n Otis \n Ni**as in Paris \n No Church in the Wild \n Diamonds from Sierra Leone (Remix) \n Swagga Like Us \n Run This Town"
+    },
+    {
+      "source": "13",
+      "target": "15",
+      "weight": 3,
+      "label": "Everything Has Changed \n End Game \n The Joker and The Queen"
+    },
+    {
+      "source": "14",
+      "target": "61",
+      "weight": 5,
+      "label": "Side to Side \n Bed \n Bad To You \n Bang Bang \n Get On Your Knees"
+    },
+    {
+      "source": "16",
+      "target": "14",
+      "weight": 2,
+      "label": "Rain on Me \n The Lady Is a Tramp"
+    },
+    {
+      "source": "21",
+      "target": "40",
+      "weight": 3,
+      "label": "Somebody to Love \n Next to You \n The Christmas Song"
+    },
+    {
+      "source": "31",
+      "target": "57",
+      "weight": 4,
+      "label": "Crew Love \n The Zone \n Live For \n Trust Issues"
+    },
+    {
+      "source": "30",
+      "target": "33",
+      "weight": 2,
+      "label": "Lift Off \n Bad Girl"
+    },
+    {
+      "source": "45",
+      "target": "47",
+      "weight": 4,
+      "label": "La Canción \n Cuidao por Ahí \n Yo Le Llego \n Oasis"
+    },
+    {
+      "source": "46",
+      "target": "44",
+      "weight": 3,
+      "label": "Chantaje \n Clandestino \n Me Enamoré"
+    },
+    {
+      "source": "41",
+      "target": "42",
+      "weight": 1,
+      "label": "Award Show Performances"
+    },
+    {
+      "source": "55",
+      "target": "54",
+      "weight": 4,
+      "label": "Guilty Conscience \n Forgot About Dre \n What's The Difference \n I Need a Doctor"
+    },
+    {
+      "source": "55",
+      "target": "56",
+      "weight": 7,
+      "label": "Patiently Waiting \n Don't Push Me \n Remember The Name \n Encore / Curtains Down \n Love Me \n The Re-Up \n Jimmy Crack Corn"
+    },
+    {
+      "source": "55",
+      "target": "33",
+      "weight": 3,
+      "label": "Love the Way You Lie \n The Monster \n Love the Way You Lie (Part II)"
+    },
+    { "source": "55", "target": "4", "weight": 1, "label": "Stan" },
+    { "source": "55", "target": "30", "weight": 1, "label": "Walk on Water" },
+    {
+      "source": "55",
+      "target": "15",
+      "weight": 2,
+      "label": "River \n Remember The Name"
+    },
+    { "source": "55", "target": "13", "weight": 1, "label": "Almost Haunted" },
+    { "source": "55", "target": "53", "weight": 1, "label": "Renegade" },
+    { "source": "55", "target": "65", "weight": 1, "label": "Love Game" },
+    { "source": "55", "target": "61", "weight": 1, "label": "Roman's Revenge" },
+    { "source": "33", "target": "68", "weight": 1, "label": "Break It Off" },
+    {
+      "source": "33",
+      "target": "53",
+      "weight": 2,
+      "label": "Umbrella \n Run This Town"
+    },
+    {
+      "source": "33",
+      "target": "24",
+      "weight": 1,
+      "label": "If I Never See Your Face Again"
+    },
+    {
+      "source": "33",
+      "target": "66",
+      "weight": 3,
+      "label": "Run This Town \n All of the Lights \n FourFiveSeconds"
+    },
+    {
+      "source": "33",
+      "target": "57",
+      "weight": 2,
+      "label": "What's My Name? \n Take Care"
+    },
+    { "source": "33", "target": "61", "weight": 1, "label": "Fly" },
+    {
+      "source": "33",
+      "target": "46",
+      "weight": 1,
+      "label": "Can't Remember to Forget You"
+    },
+    { "source": "46", "target": "50", "weight": 1, "label": "Perro Fiel" },
+    { "source": "46", "target": "48", "weight": 1, "label": "Rabiosa" },
+    { "source": "13", "target": "56", "weight": 1, "label": "Both of Us" },
+    {
+      "source": "1",
+      "target": "32",
+      "weight": 1,
+      "label": "There Must Be More To Life Than This"
+    },
+    {
+      "source": "1",
+      "target": "4",
+      "weight": 2,
+      "label": "Too Young \n Angeline"
+    },
+    {
+      "source": "2",
+      "target": "13",
+      "weight": 1,
+      "label": "As Tears Go By (Live) "
+    },
+    {
+      "source": "2",
+      "target": "16",
+      "weight": 1,
+      "label": "Sweet Sounds Of Heaven"
+    },
+    { "source": "2", "target": "64", "weight": 1, "label": "T.H.E" },
+    { "source": "3", "target": "55", "weight": 1, "label": "Dream On" },
+    { "source": "4", "target": "17", "weight": 1, "label": "Cold Heart" },
+    { "source": "4", "target": "15", "weight": 1, "label": "Merry Christmas" },
+    { "source": "4", "target": "23", "weight": 1, "label": "Hold Me Closer" },
+    {
+      "source": "5",
+      "target": "6",
+      "weight": 1,
+      "label": "Hole in the Sky (Live)"
+    },
+    {
+      "source": "6",
+      "target": "28",
+      "weight": 1,
+      "label": "Nothing Else Matters"
+    },
+    {
+      "source": "6",
+      "target": "4",
+      "weight": 1,
+      "label": "Nothing Else Matters"
+    },
+    { "source": "6", "target": "16", "weight": 1, "label": "Moth Into Flame" },
+    {
+      "source": "6",
+      "target": "47",
+      "weight": 1,
+      "label": "Wherever I May Roam"
+    },
+    { "source": "7", "target": "48", "weight": 1, "label": "Now Or Never" },
+    { "source": "8", "target": "32", "weight": 1, "label": "Give in to Me" },
+    {
+      "source": "8",
+      "target": "3",
+      "weight": 2,
+      "label": "Mama Kin (Live) \n Train Kept A Rollin' (Live)"
+    },
+    { "source": "9", "target": "18", "weight": 1, "label": "Let Somebody Go" },
+    { "source": "9", "target": "53", "weight": 1, "label": "Lost!" },
+    {
+      "source": "10",
+      "target": "53",
+      "weight": 1,
+      "label": "Sunday Bloody Sunday (Live)"
+    },
+    {
+      "source": "12",
+      "target": "60",
+      "weight": 1,
+      "label": "Thunder/Young Dumb & Broke (Medley)"
+    },
+    {
+      "source": "14",
+      "target": "31",
+      "weight": 4,
+      "label": "Love Me Harder \n Off the table \n Save Your Tears (Remix) \n Die For You (Remix)"
+    },
+    { "source": "14", "target": "21", "weight": 1, "label": "Stuck with U" },
+    {
+      "source": "14",
+      "target": "34",
+      "weight": 2,
+      "label": "34+35 (Remix) \n Motive"
+    },
+    { "source": "14", "target": "38", "weight": 1, "label": "Faith" },
+    {
+      "source": "14",
+      "target": "36",
+      "weight": 1,
+      "label": "Oh Santa! (Remix)"
+    },
+    { "source": "15", "target": "21", "weight": 1, "label": "I Don't Care" },
+    { "source": "15", "target": "58", "weight": 1, "label": "Antisocial" },
+    {
+      "source": "15",
+      "target": "56",
+      "weight": 1,
+      "label": "Remember The Name"
+    },
+    { "source": "15", "target": "22", "weight": 1, "label": "BLOW" },
+    {
+      "source": "16",
+      "target": "30",
+      "weight": 2,
+      "label": "Telephone \n Video Phone"
+    },
+    {
+      "source": "16",
+      "target": "22",
+      "weight": 1,
+      "label": "Die With a Smile"
+    },
+    { "source": "16", "target": "4", "weight": 1, "label": "Sine From Above" },
+    { "source": "16", "target": "63", "weight": 1, "label": "Starstruck" },
+    { "source": "17", "target": "28", "weight": 1, "label": "Prisoner" },
+    {
+      "source": "17",
+      "target": "47",
+      "weight": 1,
+      "label": "Un Día (One Day)"
+    },
+    {
+      "source": "18",
+      "target": "19",
+      "weight": 1,
+      "label": "We Don't Talk Anymore"
+    },
+    { "source": "19", "target": "41", "weight": 1, "label": "Left and Right" },
+    { "source": "19", "target": "4", "weight": 1, "label": "After All" },
+    { "source": "20", "target": "66", "weight": 1, "label": "E.T." },
+    { "source": "20", "target": "61", "weight": 1, "label": "Swish Swish" },
+    {
+      "source": "21",
+      "target": "61",
+      "weight": 1,
+      "label": "Beauty And A Beat"
+    },
+    { "source": "21", "target": "60", "weight": 1, "label": "I'm The One" },
+    {
+      "source": "22",
+      "target": "61",
+      "weight": 2,
+      "label": "Finesse \n Please Me"
+    },
+    { "source": "22", "target": "42", "weight": 1, "label": "Apt." },
+    { "source": "23", "target": "33", "weight": 1, "label": "S&M (Remix)" },
+    {
+      "source": "23",
+      "target": "64",
+      "weight": 2,
+      "label": "Scream & Shout \n Big Fat Bass"
+    },
+    {
+      "source": "24",
+      "target": "26",
+      "weight": 1,
+      "label": "Moves Like Jagger"
+    },
+    { "source": "24", "target": "61", "weight": 1, "label": "Girls Like You" },
+    { "source": "24", "target": "42", "weight": 1, "label": "Priceless" },
+    { "source": "25", "target": "22", "weight": 1, "label": "All I Ask" },
+    {
+      "source": "25",
+      "target": "55",
+      "weight": 1,
+      "label": "Through The Fire"
+    },
+    { "source": "25", "target": "15", "weight": 1, "label": "The Way We Were" },
+    {
+      "source": "26",
+      "target": "48",
+      "weight": 1,
+      "label": "Feel This Moment"
+    },
+    {
+      "source": "28",
+      "target": "30",
+      "weight": 2,
+      "label": "Just Stand Up! \n II Most Wanted"
+    },
+    {
+      "source": "29",
+      "target": "48",
+      "weight": 2,
+      "label": "On the Floor \n Dance Again"
+    },
+    {
+      "source": "29",
+      "target": "44",
+      "weight": 2,
+      "label": "Pa' Ti \n Lonely"
+    },
+    { "source": "29", "target": "45", "weight": 1, "label": "Te Guste" },
+    {
+      "source": "30",
+      "target": "53",
+      "weight": 7,
+      "label": "Crazy in Love \n Deja Vu \n 03 'Bonnie & Clyde \n Family Feud \n Drunk in Love \n Top Off \n Shining"
+    },
+    { "source": "30", "target": "61", "weight": 1, "label": "Feeling Myself" },
+    { "source": "30", "target": "47", "weight": 1, "label": "Mi Gente" },
+    { "source": "30", "target": "68", "weight": 1, "label": "Baby Boy" },
+    { "source": "30", "target": "57", "weight": 1, "label": "Mine" },
+    { "source": "31", "target": "17", "weight": 1, "label": "Popular" },
+    { "source": "31", "target": "59", "weight": 1, "label": "One Right Now" },
+    { "source": "31", "target": "58", "weight": 1, "label": "K-pop" },
+    { "source": "31", "target": "49", "weight": 1, "label": "São Paulo" },
+    {
+      "source": "34",
+      "target": "31",
+      "weight": 2,
+      "label": "In Your Eyes (Remix) \n You Right"
+    },
+    { "source": "34", "target": "61", "weight": 1, "label": "Say So (Remix)" },
+    {
+      "source": "34",
+      "target": "59",
+      "weight": 1,
+      "label": "I Don't Do Drugs"
+    },
+    {
+      "source": "35",
+      "target": "23",
+      "weight": 1,
+      "label": "Me Against the Music"
+    },
+    {
+      "source": "35",
+      "target": "30",
+      "weight": 1,
+      "label": "Break My Soul (The Queens Remix) \n Video Phone"
+    },
+    { "source": "35", "target": "60", "weight": 1, "label": "Revolver" },
+    { "source": "35", "target": "31", "weight": 1, "label": "Popular" },
+    { "source": "36", "target": "53", "weight": 1, "label": "Heartbreaker" },
+    {
+      "source": "36",
+      "target": "21",
+      "weight": 1,
+      "label": "All I Want for Christmas Is You"
+    },
+    { "source": "37", "target": "32", "weight": 1, "label": "Scream" },
+    { "source": "37", "target": "48", "weight": 1, "label": "Heartbeat Love" },
+    {
+      "source": "38",
+      "target": "32",
+      "weight": 2,
+      "label": "Just Good Friends \n Get It"
+    },
+    {
+      "source": "38",
+      "target": "4",
+      "weight": 1,
+      "label": "I Guess That's Why They Call It the Blues"
+    },
+    {
+      "source": "39",
+      "target": "53",
+      "weight": 1,
+      "label": "Empire State of Mind"
+    },
+    {
+      "source": "39",
+      "target": "57",
+      "weight": 1,
+      "label": "Un-thinkable (I'm Ready) [Remix]"
+    },
+    {
+      "source": "39",
+      "target": "30",
+      "weight": 1,
+      "label": "Put It In a Love Song"
+    },
+    { "source": "39", "target": "52", "weight": 1, "label": "Warrior Song" },
+    { "source": "40", "target": "61", "weight": 1, "label": "Lil Freak" },
+    { "source": "40", "target": "64", "weight": 1, "label": "OMG" },
+    {
+      "source": "40",
+      "target": "30",
+      "weight": 1,
+      "label": "Love In This Club, Pt. II"
+    },
+    { "source": "40", "target": "39", "weight": 1, "label": "My Boo" },
+    { "source": "41", "target": "61", "weight": 1, "label": "Idol" },
+    { "source": "41", "target": "9", "weight": 1, "label": "My Universe" },
+    {
+      "source": "41",
+      "target": "40",
+      "weight": 1,
+      "label": "Standing Next to You (Usher Remix)"
+    },
+    {
+      "source": "42",
+      "target": "17",
+      "weight": 1,
+      "label": "Kiss and Make Up"
+    },
+    { "source": "42", "target": "16", "weight": 1, "label": "Sour Candy" },
+    { "source": "42", "target": "18", "weight": 1, "label": "Ice Cream" },
+    { "source": "42", "target": "61", "weight": 1, "label": "Bet You Wanna" },
+    { "source": "43", "target": "19", "weight": 1, "label": "Lose My Breath" },
+    { "source": "43", "target": "42", "weight": 1, "label": "Social Path" },
+    { "source": "44", "target": "35", "weight": 1, "label": "Medellín" },
+    { "source": "44", "target": "47", "weight": 1, "label": "Que Pena" },
+    { "source": "44", "target": "49", "weight": 1, "label": "Sim Ou Não" },
+    { "source": "44", "target": "31", "weight": 1, "label": "Hawái (Remix)" },
+    { "source": "45", "target": "57", "weight": 1, "label": "Mia" },
+    { "source": "45", "target": "61", "weight": 1, "label": "I Like It" },
+    { "source": "46", "target": "30", "weight": 1, "label": "Beautiful Liar" },
+    { "source": "47", "target": "61", "weight": 1, "label": "I Like It" },
+    { "source": "47", "target": "21", "weight": 1, "label": "Sorry" },
+    { "source": "47", "target": "15", "weight": 1, "label": "Forever My Love" },
+    {
+      "source": "48",
+      "target": "40",
+      "weight": 1,
+      "label": "DJ Got Us Fallin' in Love"
+    },
+    { "source": "49", "target": "61", "weight": 1, "label": "Me Gusta" },
+    { "source": "49", "target": "47", "weight": 1, "label": "Downtown" },
+    { "source": "51", "target": "54", "weight": 1, "label": "California Love" },
+    {
+      "source": "51",
+      "target": "56",
+      "weight": 1,
+      "label": "The Realist Killaz"
+    },
+    {
+      "source": "51",
+      "target": "55",
+      "weight": 1,
+      "label": "One Day at a Time (Em's Version)"
+    },
+    {
+      "source": "52",
+      "target": "53",
+      "weight": 1,
+      "label": "Black Republicans"
+    },
+    {
+      "source": "52",
+      "target": "29",
+      "weight": 1,
+      "label": "I'm Gonna Be Alright"
+    },
+    { "source": "52", "target": "66", "weight": 1, "label": "We Major" },
+    {
+      "source": "52",
+      "target": "62",
+      "weight": 2,
+      "label": "I'm on One \n Hip Hop"
+    },
+    {
+      "source": "52",
+      "target": "56",
+      "weight": 1,
+      "label": "Could This Be Love"
+    },
+    {
+      "source": "53",
+      "target": "11",
+      "weight": 2,
+      "label": "Collision Course \n Numb/Encore"
+    },
+    { "source": "54", "target": "56", "weight": 1, "label": "In Da Club" },
+    { "source": "56", "target": "32", "weight": 1, "label": "Monster" },
+    {
+      "source": "59",
+      "target": "61",
+      "weight": 2,
+      "label": "Ball for Me \n Writing on the Wall"
+    },
+    {
+      "source": "59",
+      "target": "5",
+      "weight": 1,
+      "label": "Take What You Want"
+    },
+    { "source": "59", "target": "13", "weight": 1, "label": "Fortnight" },
+    { "source": "59", "target": "30", "weight": 1, "label": "LEVII'S JEANS" },
+    { "source": "60", "target": "53", "weight": 1, "label": "E.T." },
+    { "source": "60", "target": "56", "weight": 1, "label": "Payday" },
+    { "source": "61", "target": "53", "weight": 1, "label": "Monster" },
+    {
+      "source": "61",
+      "target": "35",
+      "weight": 1,
+      "label": "Give Me All Your Luvin'"
+    },
+    {
+      "source": "61",
+      "target": "23",
+      "weight": 1,
+      "label": "Till the World Ends (The Femme Fatale Remix)"
+    },
+    { "source": "61", "target": "64", "weight": 1, "label": "Check It Out" },
+    { "source": "63", "target": "35", "weight": 1, "label": "4 Minutes" },
+    {
+      "source": "63",
+      "target": "62",
+      "weight": 2,
+      "label": "Just Know Dat \n Go Ahead"
+    },
+    { "source": "64", "target": "47", "weight": 1, "label": "Ritmo" },
+    {
+      "source": "64",
+      "target": "46",
+      "weight": 2,
+      "label": "Girl Like Me \n Don't You Worry"
+    },
+    { "source": "64", "target": "49", "weight": 1, "label": "Simply the Best" },
+    {
+      "source": "62",
+      "target": "57",
+      "weight": 4,
+      "label": "POPSTAR \n GREECE \n For Free \n STAYING ALIVE"
+    },
+    {
+      "source": "62",
+      "target": "21",
+      "weight": 3,
+      "label": "I'm the One \n No Brainer \n Let It Go"
+    },
+    { "source": "62", "target": "33", "weight": 1, "label": "Wild Thoughts" },
+    {
+      "source": "62",
+      "target": "30",
+      "weight": 2,
+      "label": "Top Off \n Shining"
+    },
+    {
+      "source": "62",
+      "target": "53",
+      "weight": 2,
+      "label": "Top Off \n Shining"
+    },
+    {
+      "source": "62",
+      "target": "59",
+      "weight": 2,
+      "label": "Celebrate \n I Did It"
+    },
+    { "source": "62", "target": "60", "weight": 1, "label": "I'm the One" },
+    { "source": "50", "target": "44", "weight": 1, "label": "X" },
+    { "source": "50", "target": "47", "weight": 1, "label": "X" },
+    { "source": "44", "target": "47", "weight": 1, "label": "X" },
+    { "source": "68", "target": "17", "weight": 1, "label": "No Lie" },
+    { "source": "68", "target": "48", "weight": 1, "label": "Feel It" },
+    {
+      "source": "65",
+      "target": "57",
+      "weight": 1,
+      "label": "F**kin' Problems"
+    },
+    { "source": "65", "target": "13", "weight": 1, "label": "Bad Blood" },
+    { "source": "65", "target": "10", "weight": 1, "label": "XXX" },
+    { "source": "65", "target": "12", "weight": 1, "label": "Radioactive" },
+    {
+      "source": "65",
+      "target": "24",
+      "weight": 1,
+      "label": "Don't Wanna Know"
+    },
+    {
+      "source": "65",
+      "target": "31",
+      "weight": 2,
+      "label": "Sidewalks \n Pray for Me"
+    },
+    { "source": "65", "target": "30", "weight": 1, "label": "Freedom" },
+    {
+      "source": "65",
+      "target": "66",
+      "weight": 1,
+      "label": "No More Parties in LA"
+    },
+    { "source": "65", "target": "58", "weight": 1, "label": "goosebumps" },
+    { "source": "67", "target": "53", "weight": 1, "label": "A Star is Born" },
+    {
+      "source": "67",
+      "target": "65",
+      "weight": 4,
+      "label": "Under the Sun \n Forbidden Fruit \n They Ready \n Black Friday"
+    },
+    { "source": "66", "target": "61", "weight": 1, "label": "Monster" },
+    { "source": "66", "target": "31", "weight": 1, "label": "Hurricane" },
+    { "source": "66", "target": "30", "weight": 1, "label": "Ego" },
+    { "source": "13", "target": "18", "weight": 1, "label": "Who Says (Live)" },
+    {
+      "source": "13",
+      "target": "20",
+      "weight": 1,
+      "label": "You Need To Calm Down"
+    },
+    { "source": "14", "target": "26", "weight": 1, "label": "Just a Fool" },
+    {
+      "source": "14",
+      "target": "29",
+      "weight": 1,
+      "label": "Dance Again (Live)"
+    },
+    {
+      "source": "16",
+      "target": "26",
+      "weight": 1,
+      "label": "Do What U Want (Live"
+    },
+    {
+      "source": "18",
+      "target": "23",
+      "weight": 1,
+      "label": "Whiplash (co-writers)"
+    },
+    {
+      "source": "18",
+      "target": "20",
+      "weight": 1,
+      "label": "Same Old Love (co-writers)"
+    },
+    {
+      "source": "20",
+      "target": "23",
+      "weight": 1,
+      "label": "I'm a Slave 4 U (Katy wrote it)"
+    },
+    {
+      "source": "20",
+      "target": "27",
+      "weight": 1,
+      "label": "If We Ever Meet Again (co-writers)"
+    },
+    {
+      "source": "23",
+      "target": "26",
+      "weight": 1,
+      "label": "What's Going On (charity single)"
+    },
+    {
+      "source": "23",
+      "target": "27",
+      "weight": 2,
+      "label": "Award show performances \n Matches"
+    },
+    { "source": "29", "target": "27", "weight": 1, "label": "Play" },
+    {
+      "source": "29",
+      "target": "23",
+      "weight": 1,
+      "label": "Award show performances"
+    },
+    {
+      "source": "30",
+      "target": "32",
+      "weight": 2,
+      "label": "Dangerously in Love 2 (sample) \n Wishing on a Star (sample)"
+    },
+    {
+      "source": "30",
+      "target": "36",
+      "weight": 1,
+      "label": "When You Believe (Live)"
+    },
+    { "source": "30", "target": "37", "weight": 1, "label": "Scream (sample)" },
+    {
+      "source": "30",
+      "target": "38",
+      "weight": 1,
+      "label": "Superstition (sample)"
+    },
+    { "source": "31", "target": "33", "weight": 1, "label": "Love Me Harder" },
+    {
+      "source": "31",
+      "target": "36",
+      "weight": 1,
+      "label": "Die for You (Remix)"
+    },
+    { "source": "31", "target": "40", "weight": 1, "label": "Some Way" },
+    { "source": "32", "target": "36", "weight": 1, "label": "I'll Be There" },
+    {
+      "source": "33",
+      "target": "35",
+      "weight": 1,
+      "label": "Bitch I'm Madonna (Remix)"
+    },
+    {
+      "source": "33",
+      "target": "36",
+      "weight": 1,
+      "label": "Fly Away (sample)"
+    },
+    { "source": "33", "target": "40", "weight": 1, "label": "Lemme Get That" },
+    {
+      "source": "34",
+      "target": "40",
+      "weight": 1,
+      "label": "Need to Know (Remix)"
+    },
+    {
+      "source": "35",
+      "target": "36",
+      "weight": 1,
+      "label": "I Want You (sample)"
+    },
+    {
+      "source": "35",
+      "target": "37",
+      "weight": 1,
+      "label": "Human Nature (sample)"
+    },
+    {
+      "source": "36",
+      "target": "37",
+      "weight": 1,
+      "label": "Someday (co-writers)"
+    },
+    {
+      "source": "36",
+      "target": "38",
+      "weight": 1,
+      "label": "My Love (sample)"
+    },
+    {
+      "source": "37",
+      "target": "38",
+      "weight": 1,
+      "label": "Got 'Til It's Gone (sample)"
+    },
+    {
+      "source": "38",
+      "target": "39",
+      "weight": 1,
+      "label": "Superwoman (co-writers)"
+    }
+  ]
+}
