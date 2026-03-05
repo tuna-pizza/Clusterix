@@ -478,12 +478,12 @@ def solve_layout_for_graph_heuristic(graph_input, output_csv="heuristic_results.
                         continue
                         
                 # Try random permutations for small groups
-                if len(siblings) <= 6:
+                if len(siblings) <= 8:
                     best_random_layout = current_layout
                     best_random_all = current_all_crossings
                     best_random_visible = current_visible_crossings
                     
-                    for _ in range(5):
+                    for _ in range(3):
                         random_order = random.sample(current_order, len(current_order))
                         if not isTheSameOrder(random_order, current_order):
                             test_layout = apply_sibling_order(current_layout, siblings, random_order)
@@ -629,3 +629,4 @@ if __name__ == "__main__":
             
             layout = solve_layout_for_graph_heuristic(json_file, "heuristic_results.csv")
             print("Final layout length: {}".format(len(layout)))
+
